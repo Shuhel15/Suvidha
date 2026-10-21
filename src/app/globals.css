@@ -1,26 +1,41 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-custom: var(--font-my-font);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+
+@layer components {
+
+.section {
+  @apply flex flex-col justify-center items-center mt-20 lg:mt-50 gap-6;
+}
+
+  .hero-text {
+    @apply font-black tracking-tight text-[#B11226] max-w-4xl text-center text-5xl leading-[1.08] md:text-6xl lg:text-7xl;
+
+    text-shadow:
+      0 2px 4px rgba(177, 18, 38, 0.08),
+      0 6px 18px rgba(177, 18, 38, 0.12);
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  .h2-text {
+    @apply text-3xl sm:text-5xl sm:text-start md:text-6xl lg:text-6xl text-center font-extrabold tracking-tight leading-[1.08] text-[#B11226];
+  }
+
+  .p-text {
+    @apply text-black/60 sm:text-start max-w-3xl text-center font-custom text-base leading-7 sm:text-lg sm:leading-8;
+  }
+
+  .btn{
+    @apply font-semibold whitespace-nowrap flex flex-row justify-center items-center shadow-inner shadow-black/20 sm:px-6 sm:py-3 px-3 py-2 md:px-7 md:py-3.5 rounded-full  duration-200 
+  }
+  
+  .eye{
+   @apply inline-flex items-center gap-2 rounded-full bg-[#EDE0BE] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 shadow-inner shadow-black/10 w-fit
+  }
+  .icons{
+    @apply h-4 w-4 text-[#B11226]
+  }
+  
 }
