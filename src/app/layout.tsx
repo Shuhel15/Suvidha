@@ -5,6 +5,7 @@ import "./globals.css";
 import DottedWaves from "@/components/styling/DottedWaves";
 import Container from "@/components/layout/Container";
 import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 const myFont = localFont({
   src: "./fonts/EduQLDHand-VariableFont_wght.ttf",
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Container>
           <Navbar />
           {children}
+          <Footer/>
         </Container>
       </body>
     </html>
