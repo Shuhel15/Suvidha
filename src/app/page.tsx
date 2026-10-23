@@ -1,4 +1,5 @@
 import CategoriesSection from "@/components/landing/CategoriesSection";
+import FAQSection from "@/components/landing/FAQSection";
 import ForEveryone from "@/components/landing/ForEveryone";
 import HeroSection from "@/components/landing/Hero";
 import HowItWorks from "@/components/landing/HowItWorks";
@@ -14,6 +15,7 @@ export default function Home() {
     <HowItWorks/>
     <ForEveryone/>
     <LocalDiscovery/>
+    <FAQSection/>
     </>
   );
 }

@@ -7,6 +7,9 @@
 
 @layer components {
 
+html{
+  scroll-behavior: smooth;
+}
 .section {
   @apply flex flex-col justify-center items-center mt-20 lg:mt-50 gap-6;
 }
