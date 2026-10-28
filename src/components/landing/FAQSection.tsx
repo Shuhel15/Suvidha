@@ -42,7 +42,7 @@ const faqs = [
     category: "FOR BUSINESS OWNERS",
     question: "Which types of businesses is Suvidha for?",
     answer:
-      "The initial focus is on salons and barbershops, clinics and doctors, and mobile repair shops. The platform is designed around the different workflows these services need.",
+      "The initial focus is on salons and barbershops and repair shops. The platform is designed around the different workflows these services need.",
   },
 ];
 
