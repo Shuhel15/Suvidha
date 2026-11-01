@@ -6,6 +6,7 @@ import DottedWaves from "@/components/styling/DottedWaves";
 import Container from "@/components/layout/Container";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { Toaster } from "react-hot-toast";
 
 const myFont = localFont({
   src: "./fonts/EduQLDHand-VariableFont_wght.ttf",
@@ -32,11 +33,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={` ${outfit.variable} ${myFont.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#F5EBD0]">
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          toastOptions={{
+            className:
+              "bg-[#F5EBD0] shadow-lg border border-[#B11226] text-black",
+            duration: 5000,
+          }}
+        />
         <DottedWaves />
         <Container>
           <Navbar />
           {children}
-          <Footer/>
+          <Footer />
         </Container>
       </body>
     </html>

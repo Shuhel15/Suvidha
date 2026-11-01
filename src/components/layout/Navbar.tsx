@@ -57,7 +57,7 @@ export default function Navbar() {
         <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#B11226] font-black text-black">
           S
         </span>
-        uvidha
+        uvidha<span className="text-[#B11226]">.</span>
       </motion.h1>
 
       <motion.div
