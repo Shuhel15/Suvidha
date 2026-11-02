@@ -50,7 +50,13 @@ export default function LoginForm() {
   };
   return (
     <section className="section">
-      <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 overflow-hidden rounded-3xl border border-black/10 bg-white shadow-2xl shadow-black/10">
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+        className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 overflow-hidden rounded-3xl border border-black/10 bg-white shadow-2xl shadow-black/10"
+      >
         <div className="relative hidden md:flex flex-col justify-between overflow-hidden bg-[#F5EBD0] p-12 lg:p-16">
           <motion.div
             animate={{
@@ -76,38 +82,47 @@ export default function LoginForm() {
           ></motion.div>
 
           <div className="relative z-10">
-            <Link href="/" className="inline-flex items-center gap-1">
+            <motion.h1
+              variants={springItem as Variants}
+              className="inline-flex items-center gap-1"
+            >
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#B11226] text-xl font-black text-white shadow-lg">
                 S
               </span>
               <span className="text-2xl font-extrabold tracking-tight text-black/70">
                 uvidha<span className="text-[#B11226]">.</span>
               </span>
-            </Link>
+            </motion.h1>
           </div>
 
           <div className="relative z-10 my-10 space-y-3">
-            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.25em] text-[#B11226]">
+            <motion.p
+              variants={springItem as Variants}
+              className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.25em] text-[#B11226]"
+            >
               <span className="h-2 w-2 rounded-full bg-[#B11226]" />
               Your time. Your convenience.
-            </p>
+            </motion.p>
 
-            <h1 className="max-w-lg text-4xl font-bold leading-[1.15] tracking-tight text-[#292524] lg:text-5xl">
+            <motion.h2
+              variants={springItem as Variants}
+              className="max-w-lg text-4xl font-bold leading-[1.15] tracking-tight text-[#292524] lg:text-5xl"
+            >
               Life gets busy.
               <span className="block text-[#B11226]">
                 Your services shouldn&apos;t.
               </span>
-            </h1>
+            </motion.h2>
 
-            <p className="max-w-md text-base leading-8 text-black/55">
+            <motion.p
+              variants={springItem as Variants}
+              className=" font-custom max-w-md text-base leading-8 text-black/55"
+            >
               From finding a nearby salon to tracking a repair, Suvidha brings
               everyday local services closer to you.
-            </p>
+            </motion.p>
 
             <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              animate="show"
               className="space-y-5 pt-5"
             >
               {[
@@ -154,17 +169,25 @@ export default function LoginForm() {
             </motion.div>
           </div>
 
-          <div className="relative z-10 flex items-center justify-between text-xs text-black/40">
+          <motion.div
+            variants={springItem as Variants}
+            className="relative z-10 flex items-center justify-between text-xs text-black/40"
+          >
             <p>© 2026 Suvidha. All rights reserved.</p>
             <span className="font-semibold tracking-widest">MADE FOR YOU.</span>
-          </div>
+          </motion.div>
         </div>
 
         {/* RIGHT SIDE */}
 
-        <div className="flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-16">
-          <Link
-            href="/"
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+         className="flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-16">
+          <motion.h1
+            variants={springItem as Variants}
             className="mb-12 inline-flex items-center gap-1 md:hidden"
           >
             <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#B11226] text-xl font-black text-white">
@@ -173,25 +196,34 @@ export default function LoginForm() {
             <span className="text-2xl font-extrabold text-black/70">
               uvidha<span className="text-[#B11226]">.</span>
             </span>
-          </Link>
+          </motion.h1>
 
           <div className="mb-10">
-            <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[#B11226]">
+            <motion.p
+              variants={springItem as Variants}
+              className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[#B11226]"
+            >
               Welcome back
-            </p>
+            </motion.p>
 
-            <h2 className="text-4xl font-bold tracking-tight text-[#292524]">
+            <motion.h2
+              variants={springItem as Variants}
+              className="text-4xl font-bold tracking-tight text-[#292524]"
+            >
               Sign in to
               <span className="block text-[#B11226]">your account.</span>
-            </h2>
+            </motion.h2>
 
-            <p className="mt-4 text-sm leading-6 text-black/45">
+            <motion.p
+              variants={springItem as Variants}
+              className="font-custom mt-4 text-sm leading-6 text-black/45"
+            >
               Good to see you again! Enter your details to continue.
-            </p>
+            </motion.p>
           </div>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
-            <div className="space-y-2">
+            <motion.div variants={springItem as Variants} className="space-y-2">
               <label
                 htmlFor="email"
                 className="text-sm font-semibold text-black/65"
@@ -217,9 +249,9 @@ export default function LoginForm() {
                   className="w-full bg-transparent py-4 text-sm text-black outline-none placeholder:text-black/30"
                 />
               </div>
-            </div>
+            </motion.div>
 
-            <div className="space-y-2">
+            <motion.div variants={springItem as Variants} className="space-y-2">
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="password"
@@ -263,9 +295,12 @@ export default function LoginForm() {
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="flex items-center gap-2">
+            <motion.div
+              variants={springItem as Variants}
+              className="flex items-center gap-2"
+            >
               <input
                 id="remember"
                 type="checkbox"
@@ -274,8 +309,9 @@ export default function LoginForm() {
               <label htmlFor="remember" className="text-xs text-black/50">
                 Remember me
               </label>
-            </div>
-            <button
+            </motion.div>
+            <motion.button
+              variants={springItem as Variants}
               type="submit"
               className="group flex w-full items-center justify-center gap-3 rounded-xl bg-[#B11226] py-4 font-semibold text-white shadow-lg shadow-[#B11226]/20 transition-all duration-300 hover:-translate-y-1 hover:bg-[#930F20] hover:shadow-xl active:scale-[0.98]"
             >
@@ -284,27 +320,36 @@ export default function LoginForm() {
                 size={18}
                 className="transition-transform duration-300 group-hover:translate-x-1"
               />
-            </button>
+            </motion.button>
           </form>
 
           <div className="mt-10 text-center">
-            <p className="text-sm text-black/45">
+            <motion.p
+              variants={springItem as Variants}
+              className="text-sm text-black/45"
+            >
               Don&apos;t have an account?{" "}
               <Link
                 href="/register"
                 className="group font-bold text-[#B11226] hover:underline"
               >
                 Create account
-                <ArrowUpRight size={13} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 ml-0.5 inline" />
+                <ArrowUpRight
+                  size={13}
+                  className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 ml-0.5 inline"
+                />
               </Link>
-            </p>
+            </motion.p>
           </div>
 
-          <p className="mt-12 text-center text-[11px] text-black/30">
+          <motion.p
+            variants={springItem as Variants}
+            className="mt-12 text-center text-[11px] text-black/30"
+          >
             Your everyday services, made simpler with Suvidha.
-          </p>
-        </div>
-      </div>
+          </motion.p>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

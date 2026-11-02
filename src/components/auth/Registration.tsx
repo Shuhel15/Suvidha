@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
   const [name, setName] = useState("");
@@ -28,6 +29,8 @@ export default function RegisterForm() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  const router = useRouter();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -77,6 +80,24 @@ export default function RegisterForm() {
       toast.error("Password does not match");
       return;
     }
+    try{
+      const response = await fetch("/api/auth/register",{
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: trimmedName, email, password }),
+        })
+        const data = await response.json();
+        if (!response.ok || !data.success) {
+          toast.error(data.message || "Something went wrong");
+        }
+        router.push("/auth/otp-verify");
+      
+    }catch(error){
+      console.error("Error during registration:", error);
+      toast.error("An error occurred during registration. Please try again.");
+    }
   };
   return (
     <section className="section">
@@ -86,7 +107,7 @@ export default function RegisterForm() {
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
           variants={staggerContainer}
-          className="relative hidden md:flex flex-col justify-between overflow-hidden bg-[#F5EBD0] p-12 lg:p-6"
+          className="relative hidden md:flex flex-col gap-12 overflow-hidden bg-[#F5EBD0] p-10 lg:p-12"
         >
           <motion.div
             animate={{
@@ -125,7 +146,7 @@ export default function RegisterForm() {
             </Link>
           </motion.div>
 
-          <div className="relative z-10  space-y-3">
+          <div className="relative z-10 space-y-4">
             <motion.p
               variants={springItem as Variants}
               className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.25em] text-[#B11226]"
@@ -146,17 +167,14 @@ export default function RegisterForm() {
 
             <motion.p
               variants={springItem as Variants}
-              className="max-w-md text-base leading-8 text-black/55"
+              className="font-custom max-w-md text-base leading-8 text-black/55"
             >
               Create your account and discover a better way to connect with the
               local services that keep your life moving.
             </motion.p>
 
             <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              animate="show"
-              className="space-y-5 pt-5"
+              className="space-y-5 pt-6"
             >
               {[
                 {
@@ -202,44 +220,62 @@ export default function RegisterForm() {
             </motion.div>
           </div>
 
-          <div className="relative z-10 flex items-center justify-between text-xs text-black/40">
+          <motion.div
+            variants={springItem as Variants}
+            className="relative mt-auto z-10 flex items-center justify-between text-xs text-black/40"
+          >
             <p>© 2026 Suvidha. All rights reserved.</p>
             <span className="font-semibold tracking-widest">MADE FOR YOU.</span>
-          </div>
+          </motion.div>
         </motion.div>
 
         {/* RIGHT SIDE */}
 
-        <div className="flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-16">
-          <Link
-            href="/"
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          className="flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-16"
+        >
+          <motion.h1
+            variants={springItem as Variants}
             className="mb-12 inline-flex items-center gap-1 md:hidden"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#B11226] text-xl font-black text-white">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#B11226] text-3xl font-black">
               S
             </span>
             <span className="text-2xl font-extrabold text-black/70">
               uvidha<span className="text-[#B11226]">.</span>
             </span>
-          </Link>
+          </motion.h1>
 
           <div className="mb-10">
-            <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[#B11226]">
+            <motion.p
+              variants={springItem as Variants}
+              className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[#B11226]"
+            >
               Welcome to suvidha
-            </p>
+            </motion.p>
 
-            <h2 className="text-4xl font-bold tracking-tight text-[#292524]">
+            <motion.h2
+              variants={springItem as Variants}
+              className="text-4xl font-bold tracking-tight text-[#292524]"
+            >
               Create
               <span className="block text-[#B11226]">your account.</span>
-            </h2>
+            </motion.h2>
 
-            <p className="mt-4 text-sm leading-6 text-black/45">
+            <motion.p
+              variants={springItem as Variants}
+              className="font-custom mt-4 text-sm leading-6 text-black/45"
+            >
               Join Suvidha and make everyday services simpler.{" "}
-            </p>
+            </motion.p>
           </div>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
-            <div className="space-y-2">
+            <motion.div variants={springItem as Variants} className="space-y-2">
               <label
                 htmlFor="name"
                 className="text-sm font-semibold text-black/65"
@@ -274,9 +310,9 @@ export default function RegisterForm() {
                   {nameError}
                 </p>
               )}
-            </div>
+            </motion.div>
 
-            <div className="space-y-2">
+            <motion.div variants={springItem as Variants} className="space-y-2">
               <label
                 htmlFor="email"
                 className="text-sm font-semibold text-black/65"
@@ -302,9 +338,9 @@ export default function RegisterForm() {
                   className="w-full bg-transparent py-4 text-sm text-black outline-none placeholder:text-black/30"
                 />
               </div>
-            </div>
+            </motion.div>
 
-            <div className="space-y-2">
+            <motion.div variants={springItem as Variants} className="space-y-2">
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="password"
@@ -353,9 +389,9 @@ export default function RegisterForm() {
                   {passwordError}
                 </p>
               )}
-            </div>
+            </motion.div>
 
-            <div className="space-y-2">
+            <motion.div variants={springItem as Variants} className="space-y-2">
               <label
                 htmlFor="confirmPassword"
                 className="text-sm font-semibold text-black/65"
@@ -398,9 +434,10 @@ export default function RegisterForm() {
                   )}
                 </button>
               </div>
-            </div>
+            </motion.div>
 
-            <button
+            <motion.button
+              variants={springItem as Variants}
               type="submit"
               className="group flex w-full items-center justify-center gap-3 rounded-xl bg-[#B11226] py-4 font-semibold text-white shadow-lg shadow-[#B11226]/20 transition-all duration-300 hover:-translate-y-1 hover:bg-[#930F20] hover:shadow-xl active:scale-[0.98]"
             >
@@ -409,11 +446,14 @@ export default function RegisterForm() {
                 size={18}
                 className="transition-transform duration-300 group-hover:translate-x-1"
               />
-            </button>
+            </motion.button>
           </form>
 
           <div className="mt-10 text-center">
-            <p className="text-sm text-black/45">
+            <motion.p
+              variants={springItem as Variants}
+              className="text-sm text-black/45"
+            >
               Already have an account?{" "}
               <Link
                 href="/login"
@@ -425,13 +465,16 @@ export default function RegisterForm() {
                   className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 duration-200  ml-0.5 inline"
                 />
               </Link>
-            </p>
+            </motion.p>
           </div>
 
-          <p className="mt-12 text-center text-[11px] text-black/30">
+          <motion.p
+            variants={springItem as Variants}
+            className="mt-12 text-center text-[11px] text-black/30"
+          >
             Your everyday services, made simpler with Suvidha.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
       </div>
     </section>
   );
