@@ -106,14 +106,16 @@ export default function RegisterForm() {
         }),
       });
       const data = await response.json();
+
+      if (response.ok && data.success) {
+        toast.success(data.message);
+        router.push("/auth/otp-verify");
+      }
+
       if (!response.ok || !data.success) {
         toast.error(data.message || "Something went wrong");
         return;
       }
-      toast.success(
-        "OTP has been sent to your email. Please verify to complete registration.",
-      );
-      router.push("/auth/otp-verify");
     } catch (error) {
       console.error("Error during registration:", error);
       toast.error("An error occurred during registration. Please try again.");
