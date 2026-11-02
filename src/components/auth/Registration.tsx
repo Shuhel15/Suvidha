@@ -242,7 +242,7 @@ export default function RegisterForm() {
             variants={springItem as Variants}
             className="mb-12 inline-flex items-center gap-1 md:hidden"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#B11226] text-3xl font-black">
+            <span className="flex text-white h-10 w-10 items-center justify-center rounded-full bg-[#B11226] text-3xl font-black">
               S
             </span>
             <span className="text-2xl font-extrabold text-black/70">

@@ -85,7 +85,9 @@ export default function HowItWorks() {
   const lineProgress = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
-    <section ref={sectionRef} className="section w-full overflow-x-clip">
+    <section 
+    id="how-it-works"
+    ref={sectionRef} className="section w-full overflow-x-clip">
       <motion.div
       initial="hidden"
       whileInView="show"

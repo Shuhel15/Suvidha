@@ -1,21 +1,22 @@
-import CategoriesSection from "@/components/landing/CategoriesSection";
-import FAQSection from "@/components/landing/FAQSection";
-import ForEveryone from "@/components/landing/ForEveryone";
-import HeroSection from "@/components/landing/Hero";
-import HowItWorks from "@/components/landing/HowItWorks";
-import LocalDiscovery from "@/components/landing/LocalDiscovery";
-import WhySuvidha from "@/components/landing/WhySuvidha";
+import type { Metadata } from "next";
+import LandingPage from "@/components/landing/Landing";
+
+export const metadata: Metadata = {
+  title:"Home | Suvidha",
+  description:
+    "Discover trusted local services, book appointments, skip long queues, and track your service requests in real time. With Suvidha, manage your everyday services easily and spend less time waiting.",
+
+    alternates: {
+      canonical: "/",
+    },
+  robots:{
+    index: true,
+    follow: true,
+  }
+}
 
 export default function Home() {
   return (
-    <>
-    <HeroSection/>
-    <CategoriesSection/>
-    <WhySuvidha/>
-    <HowItWorks/>
-    <ForEveryone/>
-    <LocalDiscovery/>
-    <FAQSection/>
-    </>
-  );
+    <LandingPage/>
+  )
 }

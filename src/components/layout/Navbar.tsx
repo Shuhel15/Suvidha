@@ -14,8 +14,8 @@ export default function Navbar() {
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/#about", label: "About" },
+    { href: "/how-it-works", label: "How It works" },
     { href: "/services", label: "Services" },
-    { href: "/contact", label: "Contact" },
   ];
 
   const mobileMenuContainer = {
@@ -54,7 +54,7 @@ export default function Navbar() {
         variants={fadeInUp}
         className="flex items-center gap-0.5 text-2xl font-bold text-black/60"
       >
-        <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#B11226] font-black text-black">
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#B11226] font-black text-white">
           S
         </span>
         uvidha<span className="text-[#B11226]">.</span>
@@ -83,7 +83,7 @@ export default function Navbar() {
       <motion.div variants={fadeInUp} className="hidden md:block">
         <Link
           href="/login"
-          className="group flex items-center justify-center gap-1 bg-[#B11226] font-semibold text-black/60 hover:text-[#B11226] transition-all duration-200 ease-in-out hover:bg-[#eddcae] hover:scale-105 px-2 py-1 rounded-lg shadow-inner shadow-black/10"
+          className="group flex items-center justify-center gap-1 bg-[#B11226] font-semibold text-white/80 hover:text-[#B11226] transition-all duration-200 ease-in-out hover:bg-[#eddcae] hover:scale-105 px-2 py-1 rounded-lg shadow-inner shadow-black/10"
         >
           Login
           <LogIn className="h-4 w-4 transition-transform group-hover:translate-x-1 duration-200" />
@@ -153,7 +153,7 @@ export default function Navbar() {
             <Link
               href="/login"
               onClick={() => setIsOpen(false)}
-              className="group flex justify-center items-center gap-1 bg-[#B11226] font-semibold text-black/60 hover:text-[#B11226] transition-all duration-200 ease-in-out hover:bg-[#eddcae] hover:scale-105 px-2 py-1 rounded-lg shadow-inner shadow-black/10"
+              className="group flex justify-center items-center gap-1 bg-[#B11226] font-semibold text-white/80 hover:text-[#B11226] transition-all duration-200 ease-in-out hover:bg-[#eddcae] hover:scale-105 px-2 py-1 rounded-lg shadow-inner shadow-black/10"
             >
               Login
               <LogIn className="h-4 w-4 transition-transform group-hover:translate-x-1 duration-200" />

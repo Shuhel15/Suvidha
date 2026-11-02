@@ -48,7 +48,7 @@ export default function Footer() {
               aria-label="Suvidha home"
               className="inline-flex items-center gap-1.5"
             >
-              <span className="flex size-9 items-center justify-center rounded-full bg-[#B11226] text-2xl font-black">
+              <span className="flex size-9 items-center justify-center rounded-full bg-[#B11226] text-white text-2xl font-black">
                 S
               </span>
 
