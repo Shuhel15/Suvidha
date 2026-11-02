@@ -1,0 +1,27 @@
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum AccountType{
+  CUSTOMER
+  BUSINESS_OWNER
+}
+
+model User{
+  id String @id @default(cuid())
+  name String
+  email String @unique
+  phone String 
+  password String
+  accountType AccountType @default(CUSTOMER)
+  emailVerified Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

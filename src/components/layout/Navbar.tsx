@@ -14,7 +14,7 @@ export default function Navbar() {
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/#about", label: "About" },
-    { href: "/how-it-works", label: "How It works" },
+    { href: "/#how-it-works", label: "How It works" },
     { href: "/services", label: "Services" },
   ];
 
@@ -47,7 +47,7 @@ export default function Navbar() {
       variants={navbarDrop}
       initial="hidden"
       animate="show"
-      className="fixed top-3 left-0 right-0 z-50 mx-auto flex h-14 w-[calc(100%-2rem)] max-w-7xl items-center justify-between rounded-xl border border-black/60 bg-[#F5EBD0]/30 px-4 backdrop-blur-md shadow-lg shadow-black/20 sm:w-[calc(100%-3rem)] lg:w-[calc(100%-4rem)]"
+      className="fixed top-3 left-0 right-0 z-50 mx-auto flex h-14 w-[calc(100%-2rem)] max-w-7xl items-center justify-between rounded-xl border border-[#B11226]/20 bg-[#F5EBD0]/30 px-4 backdrop-blur-md shadow-xl shadow-black/10 sm:w-[calc(100%-3rem)] lg:w-[calc(100%-4rem)]"
 
     >
       <motion.h1

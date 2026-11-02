@@ -43,7 +43,7 @@ export default function HeroSection() {
             whileTap={{ scale: 1 }}
             onClick={() => route.push("/services")}
             type="button"
-            className=" btn text-white bg-[#B11226] hover:bg-[#921020] gap-2"
+            className="group btn text-white bg-[#B11226] hover:bg-[#921020] gap-2"
           >
             Explore services
             <MoveRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />

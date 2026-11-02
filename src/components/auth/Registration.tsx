@@ -8,6 +8,7 @@ import {
   EyeOff,
   ArrowRight,
   Mail,
+  Phone,
   LockKeyhole,
   ArrowUpRight,
   Compass,
@@ -23,13 +24,18 @@ export default function RegisterForm() {
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [accountType, setAccountType] = useState<
+    "CUSTOMER" | "BUSINESS_OWNER" | ""
+  >("CUSTOMER");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   const router = useRouter();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -54,7 +60,12 @@ export default function RegisterForm() {
       return;
     }
 
-    if (!email || !password || !confirmPassword) {
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+      setPhoneError("Enter a valid 10-digit mobile number");
+      return;
+    }
+
+    if (!email || !password || !confirmPassword || !accountType || !phone) {
       toast.error("Please fill in all fields");
       return;
     }
@@ -80,21 +91,30 @@ export default function RegisterForm() {
       toast.error("Password does not match");
       return;
     }
-    try{
-      const response = await fetch("/api/auth/register",{
+    try {
+      const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name: trimmedName, email, password }),
-        })
-        const data = await response.json();
-        if (!response.ok || !data.success) {
-          toast.error(data.message || "Something went wrong");
-        }
-        router.push("/auth/otp-verify");
-      
-    }catch(error){
+        body: JSON.stringify({
+          name: trimmedName,
+          email: email.trim().toLocaleLowerCase(),
+          password,
+          phone,
+          accountType,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        toast.error(data.message || "Something went wrong");
+        return;
+      }
+      toast.success(
+        "OTP has been sent to your email. Please verify to complete registration.",
+      );
+      router.push("/auth/otp-verify");
+    } catch (error) {
       console.error("Error during registration:", error);
       toast.error("An error occurred during registration. Please try again.");
     }
@@ -173,9 +193,7 @@ export default function RegisterForm() {
               local services that keep your life moving.
             </motion.p>
 
-            <motion.div
-              className="space-y-5 pt-6"
-            >
+            <motion.div className="space-y-5 pt-6">
               {[
                 {
                   icon: Compass,
@@ -314,6 +332,42 @@ export default function RegisterForm() {
 
             <motion.div variants={springItem as Variants} className="space-y-2">
               <label
+                htmlFor="phone"
+                className="text-sm font-semibold text-black/65"
+              >
+                Phone Number
+              </label>
+
+              <div className="group flex items-center gap-3 rounded-xl border border-black/10 bg-[#FAFAF9] px-4 transition-all duration-200 focus-within:border-[#B11226] focus-within:bg-white focus-within:ring-4 focus-within:ring-[#B11226]/10">
+                <Phone
+                  size={18}
+                  className="text-black/30 group-focus-within:text-[#B11226]"
+                />
+
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  required
+                  value={phone}
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                    setPhoneError("");
+                  }}
+                  maxLength={10}
+                  inputMode="numeric"
+                  placeholder="Enter 10-digit mobile number"
+                  className="w-full bg-transparent py-4 text-sm text-black outline-none placeholder:text-black/30"
+                />
+              </div>
+
+              {phoneError && (
+                <p className="text-sm text-[#B11226]">{phoneError}</p>
+              )}
+            </motion.div>
+
+            <motion.div variants={springItem as Variants} className="space-y-2">
+              <label
                 htmlFor="email"
                 className="text-sm font-semibold text-black/65"
               >
@@ -434,6 +488,33 @@ export default function RegisterForm() {
                   )}
                 </button>
               </div>
+
+              <motion.div
+                variants={springItem as Variants}
+                className="space-y-2"
+              >
+                <label
+                  htmlFor="accountType"
+                  className="text-sm font-semibold text-black/65"
+                >
+                  Account Type
+                </label>
+
+                <select
+                  id="accountType"
+                  name="accountType"
+                  value={accountType}
+                  onChange={(e) =>
+                    setAccountType(
+                      e.target.value as "CUSTOMER" | "BUSINESS_OWNER" | "",
+                    )
+                  }
+                  className="w-full rounded-xl border border-black/10 bg-[#FAFAF9] px-4 py-4 text-sm text-black outline-none transition-all focus:border-[#B11226] focus:bg-white focus:ring-4 focus:ring-[#B11226]/10"
+                >
+                  <option value="CUSTOMER">Customer (Default)</option>
+                  <option value="BUSINESS_OWNER">Business Owner</option>
+                </select>
+              </motion.div>
             </motion.div>
 
             <motion.button
