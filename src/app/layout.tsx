@@ -7,6 +7,7 @@ import Container from "@/components/layout/Container";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Toaster } from "react-hot-toast";
+import Providers from "@/components/Providers";
 
 const myFont = localFont({
   src: "./fonts/EduQLDHand-VariableFont_wght.ttf",
@@ -101,19 +102,24 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           position="top-center"
           reverseOrder={false}
           toastOptions={{
-            className:
-              "bg-[#F5EBD0] shadow-lg border border-[#B11226] text-black",
-            duration: 5000,
+            style: {
+              background: "#EDE0BE",
+              color: "#000000",
+              border: "1px solid #B11226",
+            },
+            duration: 4000,
           }}
         />
-        <DottedWaves />
-        <Container>
-          <Navbar />
+        <Providers>
+          <DottedWaves />
+          <Container>
+            <Navbar />
 
-          <main className="flex-1">{children}</main>
+            <main className="flex-1">{children}</main>
 
-          <Footer />
-        </Container>
+            <Footer />
+          </Container>
+        </Providers>
       </body>
     </html>
   );

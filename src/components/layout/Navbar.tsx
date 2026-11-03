@@ -5,11 +5,14 @@ import { useState } from "react";
 import { LogIn, Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
+import { useSession } from "next-auth/react";
 import { fadeInUp, staggerContainer, navbarDrop } from "./animation";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { data:session, status } = useSession();
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -48,7 +51,6 @@ export default function Navbar() {
       initial="hidden"
       animate="show"
       className="fixed top-3 left-0 right-0 z-50 mx-auto flex h-14 w-[calc(100%-2rem)] max-w-7xl items-center justify-between rounded-xl border border-[#B11226]/20 bg-[#F5EBD0]/30 px-4 backdrop-blur-md shadow-xl shadow-black/10 sm:w-[calc(100%-3rem)] lg:w-[calc(100%-4rem)]"
-
     >
       <motion.h1
         variants={fadeInUp}
@@ -80,15 +82,27 @@ export default function Navbar() {
         ))}
       </motion.div>
 
-      <motion.div variants={fadeInUp} className="hidden md:block">
-        <Link
-          href="/login"
-          className="group flex items-center justify-center gap-1 bg-[#B11226] font-semibold text-white/80 hover:text-[#B11226] transition-all duration-200 ease-in-out hover:bg-[#eddcae] hover:scale-105 px-2 py-1 rounded-lg shadow-inner shadow-black/10"
-        >
-          Login
-          <LogIn className="h-4 w-4 transition-transform group-hover:translate-x-1 duration-200" />
-        </Link>
-      </motion.div>
+      {status === "unauthenticated" && (
+        <motion.div variants={fadeInUp} className="hidden md:block">
+          <Link
+            href="/login"
+            className="group flex items-center justify-center gap-1 bg-[#B11226] font-semibold text-white/80 hover:text-[#B11226] transition-all duration-200 ease-in-out hover:bg-[#eddcae] hover:scale-105 px-2 py-1 rounded-lg shadow-inner shadow-black/10"
+          >
+            Login
+            <LogIn className="h-4 w-4 transition-transform group-hover:translate-x-1 duration-200" />
+          </Link>
+        </motion.div>
+      )}
+      {status === "authenticated" && (
+        <motion.div variants={fadeInUp} className="hidden md:block">
+          <Link
+            href="/dashboard"
+            className="group flex items-center justify-center gap-1 bg-[#B11226] font-semibold text-white/80 hover:text-[#B11226] transition-all duration-200 ease-in-out hover:bg-[#eddcae] hover:scale-105 px-2 py-1 rounded-lg shadow-inner shadow-black/10"
+          >
+            Dashboard
+          </Link>
+        </motion.div>
+      )}
 
       {/* Hamburger button */}
       <button
@@ -149,16 +163,29 @@ export default function Navbar() {
             ))}
           </motion.div>
 
-          <motion.div variants={mobileMenuItem}>
-            <Link
-              href="/login"
-              onClick={() => setIsOpen(false)}
-              className="group flex justify-center items-center gap-1 bg-[#B11226] font-semibold text-white/80 hover:text-[#B11226] transition-all duration-200 ease-in-out hover:bg-[#eddcae] hover:scale-105 px-2 py-1 rounded-lg shadow-inner shadow-black/10"
-            >
-              Login
-              <LogIn className="h-4 w-4 transition-transform group-hover:translate-x-1 duration-200" />
-            </Link>
-          </motion.div>
+          {status === "unauthenticated" && (
+            <motion.div variants={mobileMenuItem}>
+              <Link
+                href="/login"
+                onClick={() => setIsOpen(false)}
+                className="group flex justify-center items-center gap-1 bg-[#B11226] font-semibold text-white/80 hover:text-[#B11226] transition-all duration-200 ease-in-out hover:bg-[#eddcae] hover:scale-105 px-2 py-1 rounded-lg shadow-inner shadow-black/10"
+              >
+                Login
+                <LogIn className="h-4 w-4 transition-transform group-hover:translate-x-1 duration-200" />
+              </Link>
+            </motion.div>
+          )}
+          {status === "authenticated" && (
+            <motion.div variants={mobileMenuItem}>
+              <Link
+                href="/dashboard"
+                onClick={() => setIsOpen(false)}
+                className="group flex justify-center items-center gap-1 bg-[#B11226] font-semibold text-white/80 hover:text-[#B11226] transition-all duration-200 ease-in-out hover:bg-[#eddcae] hover:scale-105 px-2 py-1 rounded-lg shadow-inner shadow-black/10"
+              >
+                Dashboard
+              </Link>
+            </motion.div>
+          )}
         </motion.nav>
       </motion.div>
     </motion.nav>

@@ -16,38 +16,45 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { staggerContainer, springItem } from "../layout/animation";
+import { signIn } from "next-auth/react";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
 
-    try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await response.json();
+const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  event.preventDefault();
+  setIsLoading(true);
 
-      if (!response.ok || data.error) {
-        toast.error(data.error ?? "Unable to sign in. Please try again.");
-        return;
-      }
+  try {
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
 
-      toast.success("Login successful");
-      router.push("/");
-    } catch (error) {
-      console.error("An error occurred during login.", error);
-      toast.error("An error occurred. Please try again.");
+    if (!result || result.error || !result.ok) {
+      toast.error("Invalid email or password.");
+      return;
     }
-  };
+
+    toast.success("Login successful!");
+    router.push("/");
+    router.refresh();
+  } catch (error) {
+    console.error("Login error:", error);
+    toast.error("An error occurred. Please try again.");
+  }finally {
+    setIsLoading(false);
+  }
+};
+
+
+
   return (
     <section className="section">
       <motion.div
@@ -242,6 +249,7 @@ export default function LoginForm() {
                   name="email"
                   type="email"
                   required
+                  disabled={isLoading}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
@@ -279,6 +287,7 @@ export default function LoginForm() {
                   name="password"
                   type={showPassword ? "text" : "password"}
                   required
+                  disabled={isLoading}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
@@ -288,8 +297,9 @@ export default function LoginForm() {
 
                 <button
                   type="button"
+                  disabled={isLoading}
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-black/35 transition-colors hover:text-[#B11226]"
+                  className="text-black/35 transition-colors hover:text-[#B11226] disabled:cursor-not-allowed disabled:opacity-50"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -304,6 +314,7 @@ export default function LoginForm() {
               <input
                 id="remember"
                 type="checkbox"
+                disabled={isLoading}
                 className="h-4 w-4 accent-[#B11226]"
               />
               <label htmlFor="remember" className="text-xs text-black/50">
@@ -313,13 +324,17 @@ export default function LoginForm() {
             <motion.button
               variants={springItem as Variants}
               type="submit"
-              className="group flex w-full items-center justify-center gap-3 rounded-xl bg-[#B11226] py-4 font-semibold text-white shadow-lg shadow-[#B11226]/20 transition-all duration-300 hover:-translate-y-1 hover:bg-[#930F20] hover:shadow-xl active:scale-[0.98]"
+              disabled={isLoading}
+              aria-busy={isLoading}
+              className="group flex w-full items-center justify-center gap-3 rounded-xl bg-[#B11226] py-4 font-semibold text-white shadow-lg shadow-[#B11226]/20 transition-all duration-300 hover:-translate-y-1 hover:bg-[#930F20] hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
             >
-              <span>Sign in</span>
-              <ArrowRight
-                size={18}
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              />
+              <span>{isLoading ? "Signing in..." : "Sign in"}</span>
+              {!isLoading && (
+                <ArrowRight
+                  size={18}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              )}
             </motion.button>
           </form>
 

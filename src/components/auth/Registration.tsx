@@ -35,6 +35,7 @@ export default function RegisterForm() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
@@ -92,6 +93,7 @@ export default function RegisterForm() {
       return;
     }
     try {
+      setLoading(true);
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
@@ -119,6 +121,8 @@ export default function RegisterForm() {
     } catch (error) {
       console.error("Error during registration:", error);
       toast.error("An error occurred during registration. Please try again.");
+    }finally {
+      setLoading(false);
     }
   };
   return (
@@ -314,6 +318,7 @@ export default function RegisterForm() {
                   name="name"
                   type="text"
                   required
+                  disabled={loading}
                   value={name}
                   onChange={(e) => {
                     setName(e.target.value);
@@ -351,6 +356,7 @@ export default function RegisterForm() {
                   name="phone"
                   type="tel"
                   required
+                  disabled={loading}
                   value={phone}
                   onChange={(e) => {
                     setPhone(e.target.value);
@@ -387,6 +393,7 @@ export default function RegisterForm() {
                   name="email"
                   type="email"
                   required
+                  disabled={loading}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
@@ -417,6 +424,7 @@ export default function RegisterForm() {
                   name="password"
                   type={showPassword ? "text" : "password"}
                   required
+                  disabled={loading}
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
@@ -433,8 +441,9 @@ export default function RegisterForm() {
 
                 <button
                   type="button"
+                  disabled={loading}
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-black/35 transition-colors hover:text-[#B11226]"
+                  className="text-black/35 transition-colors hover:text-[#B11226] disabled:cursor-not-allowed disabled:opacity-50"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -466,6 +475,7 @@ export default function RegisterForm() {
                   name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                   required
+                  disabled={loading}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   autoComplete="new-password"
@@ -475,8 +485,9 @@ export default function RegisterForm() {
 
                 <button
                   type="button"
+                  disabled={loading}
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="text-black/35 transition-colors hover:text-[#B11226]"
+                  className="text-black/35 transition-colors hover:text-[#B11226] disabled:cursor-not-allowed disabled:opacity-50"
                   aria-label={
                     showConfirmPassword
                       ? "Hide confirm password"
@@ -505,6 +516,7 @@ export default function RegisterForm() {
                 <select
                   id="accountType"
                   name="accountType"
+                  disabled={loading}
                   value={accountType}
                   onChange={(e) =>
                     setAccountType(
@@ -522,13 +534,17 @@ export default function RegisterForm() {
             <motion.button
               variants={springItem as Variants}
               type="submit"
-              className="group flex w-full items-center justify-center gap-3 rounded-xl bg-[#B11226] py-4 font-semibold text-white shadow-lg shadow-[#B11226]/20 transition-all duration-300 hover:-translate-y-1 hover:bg-[#930F20] hover:shadow-xl active:scale-[0.98]"
+              disabled={loading}
+              aria-busy={loading}
+              className="group flex flex-row w-full items-center justify-center gap-3 rounded-xl bg-[#B11226] py-4 font-semibold text-white shadow-lg shadow-[#B11226]/20 transition-all duration-300 hover:-translate-y-1 hover:bg-[#930F20] hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
             >
-              <span>Create Account</span>
-              <ArrowRight
-                size={18}
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              />
+              {loading ? "Registering..." : "Create account"}
+              {!loading && (
+                <ArrowRight
+                  size={18}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              )}
             </motion.button>
           </form>
 
