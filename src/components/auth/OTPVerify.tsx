@@ -74,7 +74,7 @@ export default function OTPVerifyForm() {
     try {
       setLoading(true);
 
-      const response = await fetch("/api/auth/otp-verify", {
+      const response = await fetch("/api/auth/verify-otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

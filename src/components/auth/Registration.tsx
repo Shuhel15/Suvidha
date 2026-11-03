@@ -109,7 +109,7 @@ export default function RegisterForm() {
 
       if (response.ok && data.success) {
         toast.success(data.message);
-        router.push("/auth/otp-verify");
+        router.push("/verify-otp");
       }
 
       if (!response.ok || !data.success) {
