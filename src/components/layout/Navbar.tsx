@@ -11,8 +11,7 @@ import { fadeInUp, staggerContainer, navbarDrop } from "./animation";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { data:session, status } = useSession();
+  const { data: session, status } = useSession();
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -96,7 +95,11 @@ export default function Navbar() {
       {status === "authenticated" && (
         <motion.div variants={fadeInUp} className="hidden md:block">
           <Link
-            href="/dashboard"
+            href={
+              session?.user?.accountType === "CUSTOMER"
+                ? "/customer/dashboard"
+                : "/owner/dashboard"
+            }
             className="group flex items-center justify-center gap-1 bg-[#B11226] font-semibold text-white/80 hover:text-[#B11226] transition-all duration-200 ease-in-out hover:bg-[#eddcae] hover:scale-105 px-2 py-1 rounded-lg shadow-inner shadow-black/10"
           >
             Dashboard
@@ -178,7 +181,11 @@ export default function Navbar() {
           {status === "authenticated" && (
             <motion.div variants={mobileMenuItem}>
               <Link
-                href="/dashboard"
+                href={
+                  session?.user?.accountType === "CUSTOMER"
+                    ? "/customer/dashboard"
+                    : "/owner/dashboard"
+                }
                 onClick={() => setIsOpen(false)}
                 className="group flex justify-center items-center gap-1 bg-[#B11226] font-semibold text-white/80 hover:text-[#B11226] transition-all duration-200 ease-in-out hover:bg-[#eddcae] hover:scale-105 px-2 py-1 rounded-lg shadow-inner shadow-black/10"
               >

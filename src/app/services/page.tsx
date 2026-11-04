@@ -15,7 +15,8 @@ export const metadata: Metadata = {
   }
 }
 
-export default function services() {
+export default async function services() {
+
   return (
     <>
     <ServicesComp/>

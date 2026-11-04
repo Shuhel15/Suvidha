@@ -1,9 +1,8 @@
-import React from 'react'
-
-export default function page() {
+import CustomerDashboardComp from "@/components/customer/Dashboard";
+export default function customerDashboard() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <h1>Customer dashboard</h1>
-    </div>
-  )
+    <main>
+      <CustomerDashboardComp />
+    </main>
+  );
 }

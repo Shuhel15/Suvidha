@@ -95,7 +95,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={` ${outfit.variable} ${myFont.variable} h-full antialiased`}
+      className={`${myFont.variable} ${outfit.variable}`}
     >
       <body className="min-h-full flex flex-col bg-[#F5EBD0]">
         <Toaster

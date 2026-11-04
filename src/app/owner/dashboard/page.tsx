@@ -1,9 +1,8 @@
-import React from 'react'
-
-export default function page() {
+import OwnerDashboardComp from "@/components/owner/Dashboard";
+export default function OwnerDashboard() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <h1>Owner dashboard</h1>
-    </div>
-  )
+    <main>
+      <OwnerDashboardComp />
+    </main>
+  );
 }

@@ -5,6 +5,7 @@
 }
 
 
+
 @layer components {
 
 html{
@@ -33,12 +34,12 @@ html{
   .btn{
     @apply font-semibold whitespace-nowrap flex flex-row justify-center items-center shadow-inner shadow-black/20 sm:px-6 sm:py-3 px-3 py-2 md:px-7 md:py-3.5 rounded-full  duration-200 
   }
-  
+
   .eye{
    @apply inline-flex items-center gap-2 rounded-full bg-[#EDE0BE] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-black/50 shadow-inner shadow-black/10 w-fit
   }
   .icons{
     @apply h-4 w-4 text-[#B11226]
   }
-  
+
 }

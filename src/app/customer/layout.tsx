@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import Spinner from "@/components/layout/Spineer";
 
 export const metadata: Metadata = {
   title: "Customer Dashboard",
@@ -35,7 +36,7 @@ export default function CustomerLayout({
   children: ReactNode;
 }) {
   return (
-    <Suspense fallback={<div>Loading dashboard...</div>}>
+    <Suspense fallback={<Spinner/>}>
       <CustomerAuthGuard>{children}</CustomerAuthGuard>
     </Suspense>
   );
