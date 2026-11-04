@@ -5,12 +5,12 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Customer Dashboard",
-  description: "Customer Dashboard",
+  title: "Owner Dashboard",
+  description: "Owner Dashboard",
 };
 
 // Authentication check
-async function CustomerAuthGuard({ children }: { children: ReactNode }) {
+async function OwnerAuthGuard({ children }: { children: ReactNode }) {
   const session = await auth();
 
   if (!session?.user) {
@@ -28,7 +28,7 @@ async function CustomerAuthGuard({ children }: { children: ReactNode }) {
 export default function CustomerLayout({ children }: { children: ReactNode }) {
   return (
     <Suspense fallback={<div>Loading dashboard...</div>}>
-      <CustomerAuthGuard>{children}</CustomerAuthGuard>
+      <OwnerAuthGuard>{children}</OwnerAuthGuard>
     </Suspense>
   );
 }
