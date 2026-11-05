@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -8,20 +7,67 @@ datasource db {
   provider = "postgresql"
 }
 
-enum AccountType{
+enum AccountType {
   CUSTOMER
   BUSINESS_OWNER
 }
 
-model User{
-  id String @id @default(cuid())
-  name String
-  email String @unique
-  phone String 
-  password String
-  accountType AccountType @default(CUSTOMER)
-  emailVerified Boolean @default(false)
+model User {
+  id            String      @id @default(cuid())
+  name          String
+  email         String      @unique
+  phone         String
+  password      String
+  accountType   AccountType @default(CUSTOMER)
+  emailVerified Boolean     @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  businesses Business[]
+}
+
+model Business {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  category    String
+  phone       String
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  locations BusinessLocation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ownerId])
+  @@index([category])
+}
+
+model BusinessLocation {
+  id String @id @default(cuid())
+
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  branchName  String?
+  addressLine String
+  area        String?
+  city        String
+  state       String
+  postalCode  String
+  country     String  @default("India")
+
+  latitude  Float?
+  longitude Float?
+
+  phone String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([businessId])
+  @@index([city, postalCode])
 }
