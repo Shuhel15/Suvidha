@@ -18,8 +18,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message: "Validation failed",
-          errors: validation.error.flatten(),
+
+          errors: validation.error.issues.map((issue) => ({
+            field: issue.path.join("."),
+            message: issue.message,
+          })),
         },
         { status: 400 },
       );

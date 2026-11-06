@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import DottedWaves from "@/components/styling/DottedWaves";
@@ -15,11 +14,7 @@ const myFont = localFont({
   variable: "--font-my-font",
 });
 
-const outfit = Outfit({
-  weight: ["400", "500", "700"],
-  subsets: ["latin"],
-  variable: "--font-outfit",
-});
+
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://suvidha.vercel.app"),
@@ -95,7 +90,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${myFont.variable} ${outfit.variable}`}
+      className={`${myFont.variable}`}
     >
       <body className="min-h-full flex flex-col bg-[#F5EBD0]">
         <Toaster

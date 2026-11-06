@@ -6,7 +6,7 @@ allowedDevOrigins: ['10.66.18.236'],
   partialPrefetching: true,
   turbopack: {
     rules: {
-      "*.css": {
+      "globals.css": {
         loaders: ["@tailwindcss/turbopack"],
         as: "*.css",
       },
