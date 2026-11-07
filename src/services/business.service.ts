@@ -20,3 +20,24 @@ export async function getOwnerBusinesses(ownerId: string){
   })
   return businesses
 }
+
+export async function getBusinessDetails(
+  businessId:string,
+  ownerId:string
+){
+  const business = await prisma.business.findFirst({
+    where:{
+      id:businessId,
+      ownerId
+    },
+    include:{
+      locations:{
+        orderBy:{
+          createdAt:"asc"
+        }
+      }
+    }
+  })
+
+  return business
+}

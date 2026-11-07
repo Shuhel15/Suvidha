@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import localFont from "next/font/local";
 import "./globals.css";
 import DottedWaves from "@/components/styling/DottedWaves";
@@ -108,7 +109,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Providers>
           <DottedWaves />
           <Container>
-            <Navbar />
+            <Suspense fallback={null}>
+              <Navbar />
+            </Suspense>
 
             <main className="flex-1">{children}</main>
 

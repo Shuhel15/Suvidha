@@ -25,35 +25,32 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsLoading(true);
 
-const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-  event.preventDefault();
-  setIsLoading(true);
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
 
-  try {
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
+      if (!result || result.error || !result.ok) {
+        toast.error("Invalid email or password.");
+        return;
+      }
 
-    if (!result || result.error || !result.ok) {
-      toast.error("Invalid email or password.");
-      return;
+      toast.success("Login successful!");
+      router.push("/");
+      router.refresh();
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
-
-    toast.success("Login successful!");
-    router.push("/");
-    router.refresh();
-  } catch (error) {
-    console.error("Login error:", error);
-    toast.error("An error occurred. Please try again.");
-  }finally {
-    setIsLoading(false);
-  }
-};
-
-
+  };
 
   return (
     <section className="section">
@@ -129,9 +126,7 @@ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
               everyday local services closer to you.
             </motion.p>
 
-            <motion.div
-              className="space-y-5 pt-5"
-            >
+            <motion.div className="space-y-5 pt-5">
               {[
                 {
                   icon: MapPin,
@@ -192,7 +187,8 @@ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
-         className="flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-16">
+          className="flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-16"
+        >
           <motion.h1
             variants={springItem as Variants}
             className="mb-12 inline-flex items-center gap-1 md:hidden"
