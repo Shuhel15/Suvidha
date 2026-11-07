@@ -68,10 +68,12 @@ export default function BusinessDetails({ business }: Props) {
           </div>
 
           <div className="flex w-full flex-col gap-3 sm:flex-row lg:w-auto">
-            <button className="group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-[#B11226]/25 bg-white/70 px-5 py-3 font-semibold text-[#B11226] transition hover:-translate-y-0.5 hover:border-[#B11226] hover:bg-white lg:flex-none">
+            <Link 
+            href={`/owner/businesses/${business.id}/edit`}
+            className="group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-[#B11226]/25 bg-white/70 px-5 py-3 font-semibold text-[#B11226] transition hover:-translate-y-0.5 hover:border-[#B11226] hover:bg-white lg:flex-none">
               <Pencil size={17} className="transition-transform group-hover:-translate-x-0.5 duration-200" />
               Edit business
-            </button>
+            </Link>
             <button className="group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#B11226] px-5 py-3 font-semibold text-white shadow-lg shadow-[#B11226]/15 transition hover:-translate-y-0.5 hover:bg-[#8f0e1e] lg:flex-none">
               <Trash2 size={17} className="transition-transform group-hover:-translate-y-0.5 duration-200" />
               Delete

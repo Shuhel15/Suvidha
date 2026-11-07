@@ -26,7 +26,7 @@ export const createBusinessSchema = z.object({
 
     longitude:z.number().min(-180).max(180).optional(),
 
-    phone: z.string().trim().min(10,"Valid phone number is required").max(13).optional()
+    phone: z.string().trim().min(10).max(15).optional().or(z.literal("")),
   })
 })
 
