@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/auth-guard";
 import { createBusinessSchema } from "@/validations/business.validation";
 
+//Creat Business API
 export async function POST(request: NextRequest) {
   try {
     //Check owner autharization
@@ -67,3 +68,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+

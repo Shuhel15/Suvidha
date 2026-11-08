@@ -16,7 +16,7 @@ import { signOut } from "next-auth/react";
 import { useState } from "react";
 import { staggerContainer, springItem } from "../layout/animation";
 import { motion, type Variants } from "framer-motion";
-
+import BusinessActions from "./BusinessActions";
 
 type Business = {
   id: string;
@@ -57,18 +57,18 @@ export default function OwnerDashboardComp({ businesses }: Props) {
 
   return (
     <motion.section
-    initial="hidden"
-    whileInView="show"
-    viewport={{ once: true, amount: 0.25 }}
-    variants={staggerContainer}
-     className="relative min-h-screen overflow-hidden bg-[#F5EBD0] px-4 py-10 sm:px-6 lg:px-8 mt-20">
-
-      <div 
-      className="relative mx-auto max-w-7xl space-y-8">
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.25 }}
+      variants={staggerContainer}
+      className="relative min-h-screen overflow-hidden bg-[#F5EBD0] px-4 py-10 sm:px-6 lg:px-8 mt-20"
+    >
+      <div className="relative mx-auto max-w-7xl space-y-8">
         {/* Header */}
-        <motion.div 
-        variants={springItem as Variants}
-        className="flex flex-col justify-between gap-7 rounded-3xl border border-black/5 bg-white/45 p-5 shadow-[0_20px_60px_rgba(80,45,20,0.06)] backdrop-blur-sm sm:p-8 lg:flex-row lg:items-end">
+        <motion.div
+          variants={springItem as Variants}
+          className="flex flex-col justify-between gap-7 rounded-3xl border border-black/5 bg-white/45 p-5 shadow-[0_20px_60px_rgba(80,45,20,0.06)] backdrop-blur-sm sm:p-8 lg:flex-row lg:items-end"
+        >
           <div>
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#B11226]/15  px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] shadow-inner shadow-black/10 text-[#B11226]">
               <span className="h-1.5 w-1.5 rounded-full bg-[#B11226] animate-pulse" />
@@ -111,9 +111,10 @@ export default function OwnerDashboardComp({ businesses }: Props) {
         </motion.div>
 
         {/* Business Count */}
-        <motion.div 
-        variants={springItem as Variants}
-        className="grid gap-4 sm:grid-cols-2">
+        <motion.div
+          variants={springItem as Variants}
+          className="grid gap-4 sm:grid-cols-2"
+        >
           <div className="group rounded-2xl border border-black/5 bg-white p-5 shadow-[0_12px_35px_rgba(80,45,20,0.06)] transition hover:-translate-y-0.5">
             <div className="flex items-start justify-between">
               <div>
@@ -133,9 +134,10 @@ export default function OwnerDashboardComp({ businesses }: Props) {
             </p>
           </div>
 
-          <motion.div 
-          variants={springItem as Variants}
-          className="rounded-2xl border border-[#B11226]/10 bg-[#B11226] p-5 text-white shadow-[0_12px_35px_rgba(177,18,38,0.16)]">
+          <motion.div
+            variants={springItem as Variants}
+            className="rounded-2xl border border-[#B11226]/10 bg-[#B11226] p-5 text-white shadow-[0_12px_35px_rgba(177,18,38,0.16)]"
+          >
             <p className="text-sm font-medium text-white/70">Your workspace</p>
             <p className="mt-2 text-xl font-bold">Grow your local presence</p>
             <p className="mt-2 max-w-sm text-sm leading-6 text-white/75">
@@ -147,9 +149,10 @@ export default function OwnerDashboardComp({ businesses }: Props) {
 
         {/* Business List */}
         {businesses.length > 0 ? (
-          <motion.div 
-          variants={springItem as Variants}
-          className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <motion.div
+            variants={springItem as Variants}
+            className="grid gap-5 md:grid-cols-2 lg:grid-cols-3"
+          >
             {businesses.map((business) => {
               const Icon =
                 categoryIcons[
@@ -164,43 +167,56 @@ export default function OwnerDashboardComp({ businesses }: Props) {
               const location = business.locations[0];
 
               return (
-                <Link
+                <div
                   key={business.id}
-                  href={`/owner/businesses/${business.id}`}
-                  className="group rounded-2xl border border-black/5 bg-white p-6 shadow-[0_12px_35px_rgba(80,45,20,0.05)] transition-all duration-200 ease-in-out hover:-translate-y-1 hover:border-[#B11226]/30 hover:shadow-[0_18px_40px_rgba(80,45,20,0.1)]"
+                  className="group rounded-2xl border border-black/5 bg-white p-6 shadow-[0_12px_35px_rgba(80,45,20,0.05)] transition-all duration-200 hover:-translate-y-1 hover:border-[#B11226]/30 hover:shadow-[0_18px_40px_rgba(80,45,20,0.1)]"
                 >
-                  <div className="flex items-start justify-between">
-                    <div
-                      className={`rounded-2xl p-3.5 shadow-inner shadow-black/10 ${iconColor}`}
-                    >
-                      <Icon size={24} />
+                  {/* Business Details Link */}
+                  <Link
+                    href={`/owner/businesses/${business.id}`}
+                    className="block"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div
+                        className={`rounded-2xl p-3.5 shadow-inner shadow-black/10 ${iconColor}`}
+                      >
+                        <Icon size={24} />
+                      </div>
+
+                      <span className="rounded-full bg-gray-50 p-2 text-gray-400 shadow-inner transition group-hover:bg-[#B11226]/10 group-hover:text-[#B11226]">
+                        <ArrowUpRight
+                          size={18}
+                          className="transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                        />
+                      </span>
                     </div>
 
-                    <span className="rounded-full bg-gray-50 p-2 text-gray-400 transition  group-hover:bg-[#B11226]/10 group-hover:text-[#B11226] shadow-inner hover:shadow-inner">
-                      <ArrowUpRight size={18} className="transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    <h2 className="mt-6 truncate text-xl font-bold text-gray-900">
+                      {business.name}
+                    </h2>
+
+                    <span className="mt-2 inline-flex rounded-full bg-[#B11226]/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-[#B11226] shadow-inner shadow-black/10">
+                      {business.category}
                     </span>
+
+                    <div className="mt-6 flex items-center gap-2 text-sm text-gray-600">
+                      <MapPin size={16} className="shrink-0 text-[#B11226]" />
+
+                      {location
+                        ? `${location.city}, ${location.state}`
+                        : "Location not added"}
+                    </div>
+
+                    <p className="mt-2 border-t border-black/5 pt-3 text-sm text-gray-500">
+                      {business.phone}
+                    </p>
+                  </Link>
+
+                  {/* Edit and Delete Actions */}
+                  <div className="mt-5 border-t border-black/5 pt-4">
+                    <BusinessActions businessId={business.id} />
                   </div>
-
-                  <h2 className="mt-6 truncate text-xl font-bold text-gray-900">
-                    {business.name}
-                  </h2>
-
-                  <span className="mt-2 inline-flex rounded-full bg-[#B11226]/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-[#B11226] shadow-inner shadow-black/10">
-                    {business.category}
-                  </span>
-
-                  <div className="mt-6 flex items-center gap-2 text-sm text-gray-600">
-                    <MapPin size={16} className="shrink-0 text-[#B11226]" />
-
-                    {location
-                      ? `${location.city}, ${location.state}`
-                      : "Location not added"}
-                  </div>
-
-                  <p className="mt-2 border-t border-black/5 pt-3 text-sm text-gray-500">
-                    {business.phone}
-                  </p>
-                </Link>
+                </div>
               );
             })}
           </motion.div>
@@ -217,6 +233,7 @@ export default function OwnerDashboardComp({ businesses }: Props) {
             <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
               Register your first business to get started.
             </p>
+
             <Link
               href="/owner/businesses/new"
               className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#B11226] px-5 py-3 font-semibold text-white shadow-lg shadow-[#B11226]/15 transition hover:-translate-y-0.5 hover:bg-[#8f0e1e]"
