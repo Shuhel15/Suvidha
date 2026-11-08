@@ -6,6 +6,8 @@ import { ArrowLeft, Building2, MapPin, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
+import { staggerContainer, springItem } from "../layout/animation";
+import { motion, type Variants } from "framer-motion";
 
 type Props = {
   business: {
@@ -116,7 +118,12 @@ export default function EditBusinessForm({ business }: Props) {
   };
 
   return (
-    <section className="relative mt-30">
+    <motion.section
+    initial="hidden"
+    whileInView="show"
+    viewport={{ once: true, amount: 0.25 }}
+    variants={staggerContainer}
+     className="relative mt-30">
       <form
         onSubmit={handleSubmit}
         aria-busy={loading}
@@ -133,22 +140,28 @@ export default function EditBusinessForm({ business }: Props) {
           Back to business
         </Link>
 
-        <header className="mb-10 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
-          <div>
+        <motion.header
+        variants={staggerContainer}
+         className="mb-10 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+          <motion.div
+            variants={springItem as Variants}
+          >
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#B11226]/15 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-[#B11226] shadow-inner shadow-black/10">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#B11226]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-[#B11226] animate-pulse" />
               Business settings
             </div>
             <h1 className="max-w-2xl text-4xl font-black tracking-[-0.04em] text-[#201b17] sm:text-5xl">
               Refine your business presence.
             </h1>
-            <p className="p-text mt-3">
+            <p className="p-text mt-3 font-semibold">
               Keep your profile and location details accurate for every customer
               who discovers you.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="hidden shrink-0 items-center gap-3 rounded-2xl border border-[#d9cdb5] bg-[#fffaf0]/75 p-3 shadow-sm sm:flex">
+          <motion.div 
+          variants={springItem as Variants}
+          className="hidden shrink-0 items-center gap-3 rounded-2xl border border-[#d9cdb5] bg-[#fffaf0]/75 p-3 shadow-sm sm:flex">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#B11226] text-white">
               <Save className="h-5 w-5" />
             </div>
@@ -158,11 +171,13 @@ export default function EditBusinessForm({ business }: Props) {
                 Update two quick sections
               </p>
             </div>
-          </div>
-        </header>
+          </motion.div>
+        </motion.header>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <section className="rounded-[1.75rem] border border-[#d9cdb5] bg-[#fffaf0]/90 p-6 shadow-[0_18px_50px_rgba(91,61,24,0.07)] sm:p-8">
+          <motion.section 
+          variants={springItem as Variants}
+          className="rounded-[1.75rem] border border-[#d9cdb5] bg-[#fffaf0]/90 p-6 shadow-[0_18px_50px_rgba(91,61,24,0.07)] sm:p-8">
             <div className="mb-8 flex items-start gap-4">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#B11226]/10 text-[#B11226]">
                 <Building2 className="h-5 w-5" />
@@ -244,9 +259,11 @@ export default function EditBusinessForm({ business }: Props) {
                 />
               </div>
             </div>
-          </section>
+          </motion.section>
 
-          <section className="rounded-[1.75rem] border border-[#d9cdb5] bg-[#fffaf0]/90 p-6 shadow-[0_18px_50px_rgba(91,61,24,0.07)] sm:p-8">
+          <motion.section
+          variants={springItem as Variants}
+          className="rounded-[1.75rem] border border-[#d9cdb5] bg-[#fffaf0]/90 p-6 shadow-[0_18px_50px_rgba(91,61,24,0.07)] sm:p-8">
             <div className="mb-8 flex items-start gap-4">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#B11226]/10 text-[#B11226]">
                 <MapPin className="h-5 w-5" />
@@ -339,10 +356,12 @@ export default function EditBusinessForm({ business }: Props) {
                 />
               </div>
             </div>
-          </section>
+          </motion.section>
         </div>
 
-        <footer className="flex flex-col-reverse gap-3 pt-6 sm:flex-row sm:justify-end">
+        <motion.footer 
+        variants={springItem as Variants}
+        className="flex flex-col-reverse gap-3 pt-6 sm:flex-row sm:justify-end">
           <button
             type="button"
             onClick={() => router.back()}
@@ -367,8 +386,8 @@ export default function EditBusinessForm({ business }: Props) {
               </>
             )}
           </button>
-        </footer>
+        </motion.footer>
       </form>
-    </section>
+    </motion.section>
   );
 }

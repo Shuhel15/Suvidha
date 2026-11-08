@@ -7,13 +7,16 @@ import {
   Stethoscope,
   Wrench,
   Store,
-  ArrowRight,
   MapPin,
   LogOut,
   BriefcaseBusiness,
+  ArrowUpRight,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
+import { staggerContainer, springItem } from "../layout/animation";
+import { motion, type Variants } from "framer-motion";
+
 
 type Business = {
   id: string;
@@ -53,16 +56,24 @@ export default function OwnerDashboardComp({ businesses }: Props) {
   };
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#F5EBD0] px-4 py-10 sm:px-6 lg:px-8 mt-20">
+    <motion.section
+    initial="hidden"
+    whileInView="show"
+    viewport={{ once: true, amount: 0.25 }}
+    variants={staggerContainer}
+     className="relative min-h-screen overflow-hidden bg-[#F5EBD0] px-4 py-10 sm:px-6 lg:px-8 mt-20">
 
-      <div className="relative mx-auto max-w-7xl space-y-8">
+      <div 
+      className="relative mx-auto max-w-7xl space-y-8">
         {/* Header */}
-        <div className="flex flex-col justify-between gap-7 rounded-3xl border border-black/5 bg-white/45 p-5 shadow-[0_20px_60px_rgba(80,45,20,0.06)] backdrop-blur-sm sm:p-8 lg:flex-row lg:items-end">
+        <motion.div 
+        variants={springItem as Variants}
+        className="flex flex-col justify-between gap-7 rounded-3xl border border-black/5 bg-white/45 p-5 shadow-[0_20px_60px_rgba(80,45,20,0.06)] backdrop-blur-sm sm:p-8 lg:flex-row lg:items-end">
           <div>
-            <p className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#B11226]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-[#B11226]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#B11226]" />
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#B11226]/15  px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] shadow-inner shadow-black/10 text-[#B11226]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#B11226] animate-pulse" />
               Business Management
-            </p>
+            </div>
 
             <h1 className="h2-text text-start [text-shadow:0_2px_4px_rgba(0,0,0,0.08),0_6px_18px_rgba(0,0,0,0.12)]">
               My <span className="text-black">Businesses</span>
@@ -97,10 +108,12 @@ export default function OwnerDashboardComp({ businesses }: Props) {
               />
             </button>
           </div>
-        </div>
+        </motion.div>
 
         {/* Business Count */}
-        <div className="grid gap-4 sm:grid-cols-2">
+        <motion.div 
+        variants={springItem as Variants}
+        className="grid gap-4 sm:grid-cols-2">
           <div className="group rounded-2xl border border-black/5 bg-white p-5 shadow-[0_12px_35px_rgba(80,45,20,0.06)] transition hover:-translate-y-0.5">
             <div className="flex items-start justify-between">
               <div>
@@ -120,19 +133,23 @@ export default function OwnerDashboardComp({ businesses }: Props) {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-[#B11226]/10 bg-[#B11226] p-5 text-white shadow-[0_12px_35px_rgba(177,18,38,0.16)]">
+          <motion.div 
+          variants={springItem as Variants}
+          className="rounded-2xl border border-[#B11226]/10 bg-[#B11226] p-5 text-white shadow-[0_12px_35px_rgba(177,18,38,0.16)]">
             <p className="text-sm font-medium text-white/70">Your workspace</p>
             <p className="mt-2 text-xl font-bold">Grow your local presence</p>
             <p className="mt-2 max-w-sm text-sm leading-6 text-white/75">
               Keep your business information up to date so customers can find
               and trust your services.
             </p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Business List */}
         {businesses.length > 0 ? (
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <motion.div 
+          variants={springItem as Variants}
+          className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {businesses.map((business) => {
               const Icon =
                 categoryIcons[
@@ -159,8 +176,8 @@ export default function OwnerDashboardComp({ businesses }: Props) {
                       <Icon size={24} />
                     </div>
 
-                    <span className="rounded-full bg-gray-50 p-2 text-gray-400 transition group-hover:bg-[#B11226]/10 group-hover:text-[#B11226]">
-                      <ArrowRight size={18} className="transition group-hover:translate-x-0.5" />
+                    <span className="rounded-full bg-gray-50 p-2 text-gray-400 transition  group-hover:bg-[#B11226]/10 group-hover:text-[#B11226] shadow-inner hover:shadow-inner">
+                      <ArrowUpRight size={18} className="transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                     </span>
                   </div>
 
@@ -168,7 +185,7 @@ export default function OwnerDashboardComp({ businesses }: Props) {
                     {business.name}
                   </h2>
 
-                  <span className="mt-2 inline-flex rounded-full bg-[#B11226]/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-[#B11226]">
+                  <span className="mt-2 inline-flex rounded-full bg-[#B11226]/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-[#B11226] shadow-inner shadow-black/10">
                     {business.category}
                   </span>
 
@@ -186,7 +203,7 @@ export default function OwnerDashboardComp({ businesses }: Props) {
                 </Link>
               );
             })}
-          </div>
+          </motion.div>
         ) : (
           <div className="rounded-3xl border border-dashed border-[#B11226]/25 bg-white/70 p-12 text-center shadow-[0_12px_35px_rgba(80,45,20,0.04)]">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F5EBD0] text-[#B11226] shadow-inner shadow-black/10">
@@ -210,6 +227,6 @@ export default function OwnerDashboardComp({ businesses }: Props) {
           </div>
         )}
       </div>
-    </section>
+    </motion.section>
   );
 }

@@ -4,6 +4,7 @@ import { redirect, notFound } from "next/navigation";
 import { getBusinessDetails } from "@/services/business.service";
 import BusinessDetails from "@/components/owner/BusinessDetails";
 import toast from "react-hot-toast";
+import Spinner from "@/components/layout/Spineer";
 
 type Props = {
   params: Promise<{
@@ -39,7 +40,7 @@ async function BusinessDetailsData({ params }: Props) {
 
 export default function BusinessDetailsPage({ params }: Props) {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Spinner />}>
       <BusinessDetailsData params={params} />
     </Suspense>
   );

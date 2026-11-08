@@ -1,8 +1,10 @@
+
 import { Suspense } from "react";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { getOwnerBusinesses } from "@/services/business.service";
 import OwnerDashboardComp from "@/components/owner/Dashboard";
+import Spinner from "@/components/layout/Spineer";
 
 async function MyBusinessesData() {
   const session = await auth();
@@ -22,7 +24,7 @@ async function MyBusinessesData() {
 
 export default function MyBusinessesPage() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Spinner />}>
       <MyBusinessesData />
     </Suspense>
   );

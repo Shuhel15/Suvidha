@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -9,6 +10,8 @@ import {
   Tag,
   Trash2,
 } from "lucide-react";
+import { staggerContainer, springItem } from "../layout/animation";
+import { motion, type Variants } from "framer-motion";
 
 type Props = {
   business: {
@@ -38,7 +41,12 @@ const details = [
 
 export default function BusinessDetails({ business }: Props) {
   return (
-    <section className="mt-25">
+    <motion.section 
+    initial="hidden"
+    whileInView="show"
+    viewport={{ once: true, amount: 0.25 }}
+    variants={staggerContainer}
+    className="mt-25">
 
       <div className=" mx-auto max-w-7xl space-y-6">
         <Link
@@ -52,16 +60,18 @@ export default function BusinessDetails({ business }: Props) {
           Back to dashboard
         </Link>
 
-        <header className="flex flex-col gap-7 rounded-3xl border border-black/5 bg-white/50 p-5 shadow-[0_20px_60px_rgba(80,45,20,0.07)] backdrop-blur-sm sm:p-8 lg:flex-row lg:items-end lg:justify-between">
+        <motion.header 
+        variants={springItem as Variants}
+        className="flex flex-col gap-7 rounded-3xl border border-black/5 bg-white/50 p-5 shadow-[0_20px_60px_rgba(80,45,20,0.07)] backdrop-blur-sm sm:p-8 lg:flex-row lg:items-end lg:justify-between">
           <div className="min-w-0">
-            <p className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#B11226]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-[#B11226]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#B11226]" />
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#B11226]/15  px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] shadow-inner shadow-black/10 text-[#B11226]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#B11226] animate-pulse" />
               Business management
-            </p>
+            </div>
             <h1 className="max-w-3xl text-4xl font-black tracking-tight text-[#B11226] [text-shadow:0_2px_4px_rgba(177,18,38,0.08),0_6px_18px_rgba(177,18,38,0.1)] sm:text-5xl">
               {business.name}
             </h1>
-            <p className="font-custom mt-3 max-w-2xl text-base leading-7 text-black/60 sm:text-lg">
+            <p className="font-custom font-semibold mt-3 max-w-2xl text-base leading-7 text-black/60 sm:text-lg">
               Keep your business profile and locations clear, current, and
               ready for customers.
             </p>
@@ -79,10 +89,13 @@ export default function BusinessDetails({ business }: Props) {
               Delete
             </button>
           </div>
-        </header>
+        </motion.header>
 
-        <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-          <section className="rounded-3xl border border-black/5 bg-white p-6 shadow-[0_12px_35px_rgba(80,45,20,0.06)] sm:p-8">
+        <div 
+        className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+          <motion.section 
+          variants={springItem as Variants}
+          className="rounded-3xl border border-black/5 bg-white p-6 shadow-[0_12px_35px_rgba(80,45,20,0.06)] sm:p-8">
             <div className="flex items-start gap-4">
               <div className="rounded-2xl bg-[#F5EBD0] p-3.5 text-[#B11226] shadow-inner shadow-black/10">
                 <Building2 size={23} />
@@ -113,9 +126,11 @@ export default function BusinessDetails({ business }: Props) {
                 </div>
               ))}
             </div>
-          </section>
+          </motion.section>
 
-          <section className="rounded-3xl border border-[#B11226]/10 bg-[#B11226] p-6 text-white shadow-[0_12px_35px_rgba(177,18,38,0.16)] sm:p-8">
+          <motion.section 
+          variants={springItem as Variants}
+          className="rounded-3xl border border-[#B11226]/10 bg-[#B11226] p-6 text-white shadow-[0_12px_35px_rgba(177,18,38,0.16)] sm:p-8">
             <div className="flex items-start gap-4">
               <div className="rounded-2xl bg-white/15 p-3.5">
                 <FileText size={23} />
@@ -131,10 +146,12 @@ export default function BusinessDetails({ business }: Props) {
               {business.description ||
                 "Add a short description to help customers understand what makes your business special."}
             </p>
-          </section>
+          </motion.section>
         </div>
 
-        <section className="rounded-3xl border border-black/5 bg-white p-6 shadow-[0_12px_35px_rgba(80,45,20,0.06)] sm:p-8">
+        <motion.section 
+        variants={springItem as Variants}
+        className="rounded-3xl border border-black/5 bg-white p-6 shadow-[0_12px_35px_rgba(80,45,20,0.06)] sm:p-8">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div className="flex items-start gap-4">
               <div className="rounded-2xl bg-[#F5EBD0] p-3.5 text-[#B11226] shadow-inner shadow-black/10">
@@ -149,7 +166,7 @@ export default function BusinessDetails({ business }: Props) {
                 </h2>
               </div>
             </div>
-            <span className="w-fit rounded-full bg-[#B11226]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[#B11226]">
+            <span className="w-fit rounded-full bg-[#B11226]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[#B11226] shadow-inner ">
               {business.locations.length}{" "}
               {business.locations.length === 1 ? "branch" : "branches"}
             </span>
@@ -164,7 +181,7 @@ export default function BusinessDetails({ business }: Props) {
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-center gap-3">
-                      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#B11226] text-sm font-bold text-white">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#B11226] text-sm font-bold text-white shadow-inner shadow-black/10">
                         {index + 1}
                       </span>
                       <h3 className="font-bold text-gray-900">
@@ -209,8 +226,8 @@ export default function BusinessDetails({ business }: Props) {
               </p>
             </div>
           )}
-        </section>
+        </motion.section>
       </div>
-    </section>
+    </motion.section>
   );
 }

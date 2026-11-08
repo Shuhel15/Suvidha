@@ -10,6 +10,8 @@ import {
   Loader2,
   MapPin,
 } from "lucide-react";
+import { staggerContainer, springItem } from "../layout/animation";
+import { motion, type Variants } from "framer-motion";
 
 const fieldClass =
   "w-full rounded-xl border border-[#d9cdb5] bg-[#fffdf8] px-4 py-3.5 text-sm text-[#201b17] shadow-[0_1px_2px_rgba(54,38,20,0.04)] outline-none transition placeholder:text-[#9b9185] hover:border-[#b8a78d] focus:border-[#B11226] focus:ring-4 focus:ring-[#B11226]/10";
@@ -100,24 +102,38 @@ export default function CreateBusinessForm() {
   };
 
   return (
-    <section className="relative min-h-screen overflow-hidden px-4 pb-20 pt-28 sm:px-6 lg:px-8">
+    <motion.section 
+    initial="hidden"
+    whileInView="show"
+    viewport={{ once: true, amount: 0.25 }}
+    variants={staggerContainer}
+    className="relative min-h-screen overflow-hidden px-4 pb-20 pt-28 sm:px-6 lg:px-8">
       <form onSubmit={handleSubmit} className="relative mx-auto max-w-5xl">
         <header className="mb-10 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#B11226]/15  px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] shadow-inner shadow-black/10 text-[#B11226]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#B11226]" />
+            <motion.div 
+            variants={springItem as Variants}
+            className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#B11226]/15  px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] shadow-inner shadow-black/10 text-[#B11226]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#B11226] animate-pulse" />
               Business registration
-            </div>
-            <h1 className="max-w-2xl text-4xl font-black tracking-[-0.04em] text-[#201b17] sm:text-5xl">
+            </motion.div>
+
+            <motion.h1
+            variants={springItem as Variants}
+             className="max-w-2xl text-4xl font-black tracking-[-0.04em] text-[#201b17] sm:text-5xl">
               Give your business a place to be discovered.
-            </h1>
-            <p className="p-text mt-3">
+            </motion.h1>
+            <motion.p 
+            variants={springItem as Variants}
+            className="p-text font-semibold mt-3">
               Set up your profile and first location. Customers will use these
               details to find and connect with you.
-            </p>
+            </motion.p>
           </div>
 
-          <div className="flex items-center gap-3 rounded-2xl border border-[#d9cdb5] bg-[#fffaf0]/75 p-3 shadow-sm">
+          <motion.div 
+          variants={springItem as Variants}
+          className="flex items-center gap-3 rounded-2xl border border-[#d9cdb5] bg-[#fffaf0]/75 p-3 shadow-sm">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#B11226] text-white">
               <CheckCircle2 className="h-5 w-5" />
             </div>
@@ -127,11 +143,13 @@ export default function CreateBusinessForm() {
                 2 quick steps to get started
               </p>
             </div>
-          </div>
+          </motion.div>
         </header>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <section className="rounded-[1.75rem] border border-[#d9cdb5] bg-[#fffaf0]/90 p-6 shadow-[0_18px_50px_rgba(91,61,24,0.07)] sm:p-8">
+          <motion.section 
+          variants={springItem as Variants}
+          className="rounded-[1.75rem] border border-[#d9cdb5] bg-[#fffaf0]/90 p-6 shadow-[0_18px_50px_rgba(91,61,24,0.07)] sm:p-8">
             <div className="mb-8 flex items-start gap-4">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#B11226]/10 text-[#B11226]">
                 <Building2 className="h-5 w-5" />
@@ -213,9 +231,11 @@ export default function CreateBusinessForm() {
                 />
               </div>
             </div>
-          </section>
+          </motion.section>
 
-          <section className="rounded-[1.75rem] border border-[#d9cdb5] bg-[#fffaf0]/90 p-6 shadow-[0_18px_50px_rgba(91,61,24,0.07)] sm:p-8">
+          <motion.section
+          variants={springItem as Variants}
+           className="rounded-[1.75rem] border border-[#d9cdb5] bg-[#fffaf0]/90 p-6 shadow-[0_18px_50px_rgba(91,61,24,0.07)] sm:p-8">
             <div className="mb-8 flex items-start gap-4">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#B11226]/10 text-[#B11226]">
                 <MapPin className="h-5 w-5" />
@@ -340,10 +360,12 @@ export default function CreateBusinessForm() {
                 />
               </div>
             </div>
-          </section>
+          </motion.section>
         </div>
 
-        <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-2xl border border-[#d9cdb5] bg-[#eadfbe]/60 p-4 sm:flex-row sm:p-5">
+        <motion.div
+        variants={springItem as Variants}
+         className="mt-8 flex flex-col items-center justify-between gap-4 rounded-2xl border border-[#d9cdb5] bg-[#eadfbe]/60 p-4 sm:flex-row sm:p-5">
           <p className="text-center text-xs leading-5 text-[#806f5d] sm:text-left">
             You can add more branches and update these details later.
           </p>
@@ -363,8 +385,8 @@ export default function CreateBusinessForm() {
               </>
             )}
           </button>
-        </div>
+        </motion.div>
       </form>
-    </section>
+    </motion.section>
   );
 }

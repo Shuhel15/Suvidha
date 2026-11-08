@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { redirect, notFound } from "next/navigation";
 import { getBusinessDetails } from "@/services/business.service";
 import EditBusinessForm from "@/components/owner/EditBusinessForm";
+import Spinner from "@/components/layout/Spineer";
 
 type Props = {
   params: Promise<{
@@ -37,7 +38,7 @@ async function EditBusinessData({ params }: Props) {
 
 export default function EditBusinessPage({ params }: Props) {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Spinner />}>
       <EditBusinessData params={params} />
     </Suspense>
   );
