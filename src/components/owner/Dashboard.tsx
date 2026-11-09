@@ -11,6 +11,7 @@ import {
   LogOut,
   BriefcaseBusiness,
   ArrowUpRight,
+  Phone,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
@@ -61,7 +62,7 @@ export default function OwnerDashboardComp({ businesses }: Props) {
       whileInView="show"
       viewport={{ once: true, amount: 0.25 }}
       variants={staggerContainer}
-      className="relative min-h-screen overflow-hidden bg-[#F5EBD0] px-4 py-10 sm:px-6 lg:px-8 mt-20"
+      className="relative min-h-screen overflow-hidden bg-[#F5EBD0]  py-10  mt-20"
     >
       <div className="relative mx-auto max-w-7xl space-y-8">
         {/* Header */}
@@ -79,7 +80,7 @@ export default function OwnerDashboardComp({ businesses }: Props) {
               My <span className="text-black">Businesses</span>
             </h1>
 
-            <p className="p-text mt-3 max-w-xl">
+            <p className="p-text mt-3 max-w-xl text-start font-semibold">
               Manage all your registered businesses in one place.
             </p>
           </div>
@@ -174,7 +175,7 @@ export default function OwnerDashboardComp({ businesses }: Props) {
                   {/* Business Details Link */}
                   <Link
                     href={`/owner/businesses/${business.id}`}
-                    className="block"
+                    className="group block"
                   >
                     <div className="flex items-start justify-between">
                       <div
@@ -200,14 +201,15 @@ export default function OwnerDashboardComp({ businesses }: Props) {
                     </span>
 
                     <div className="mt-6 flex items-center gap-2 text-sm text-gray-600">
-                      <MapPin size={16} className="shrink-0 text-[#B11226]" />
+                      <MapPin size={16} className="shrink-0 text-[#B11226] transition-transform group-hover:-translate-y-0.5 duration-200" />
 
                       {location
                         ? `${location.city}, ${location.state}`
                         : "Location not added"}
                     </div>
 
-                    <p className="mt-2 border-t border-black/5 pt-3 text-sm text-gray-500">
+                    <p className="mt-2 flex items-center gap-2  border-t border-black/5 pt-3 text-sm text-gray-500">
+                    <Phone size={16} className="shrink-0 text-[#B11226] transition-transform group-hover:-translate-x-0.5 duration-200" />
                       {business.phone}
                     </p>
                   </Link>

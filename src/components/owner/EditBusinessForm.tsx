@@ -151,9 +151,9 @@ export default function EditBusinessForm({ business }: Props) {
               Business settings
             </div>
             <h1 className="max-w-2xl text-4xl font-black tracking-[-0.04em] text-[#201b17] sm:text-5xl">
-              Refine your business presence.
+              Refine your business <span className="text-[#B11226]">presence.</span>
             </h1>
-            <p className="p-text mt-3 font-semibold">
+            <p className="p-text mt-3 font-semibold text-start">
               Keep your profile and location details accurate for every customer
               who discovers you.
             </p>

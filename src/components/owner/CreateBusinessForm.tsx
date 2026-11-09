@@ -107,7 +107,7 @@ export default function CreateBusinessForm() {
     whileInView="show"
     viewport={{ once: true, amount: 0.25 }}
     variants={staggerContainer}
-    className="relative min-h-screen overflow-hidden px-4 pb-20 pt-28 sm:px-6 lg:px-8">
+    className="relative min-h-screen overflow-hidden  pb-20 pt-28  lg:px-8">
       <form onSubmit={handleSubmit} className="relative mx-auto max-w-5xl">
         <header className="mb-10 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
@@ -121,11 +121,11 @@ export default function CreateBusinessForm() {
             <motion.h1
             variants={springItem as Variants}
              className="max-w-2xl text-4xl font-black tracking-[-0.04em] text-[#201b17] sm:text-5xl">
-              Give your business a place to be discovered.
+              Give your business a place to be <span className="text-[#B11226]">discovered.</span>
             </motion.h1>
             <motion.p 
             variants={springItem as Variants}
-            className="p-text font-semibold mt-3">
+            className="p-text font-semibold mt-3 text-start">
               Set up your profile and first location. Customers will use these
               details to find and connect with you.
             </motion.p>
