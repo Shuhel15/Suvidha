@@ -8,10 +8,10 @@ import {
   Pencil,
   Phone,
   Tag,
-  Trash2,
 } from "lucide-react";
 import { staggerContainer, springItem } from "../layout/animation";
 import { motion, type Variants } from "framer-motion";
+import DeleteBusinessButton from "./DeleteBusinessButton";
 
 type Props = {
   business: {
@@ -84,10 +84,10 @@ export default function BusinessDetails({ business }: Props) {
               <Pencil size={17} className="transition-transform group-hover:-translate-x-0.5 duration-200" />
               Edit business
             </Link>
-            <button className="group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#B11226] px-5 py-3 font-semibold text-white shadow-lg shadow-[#B11226]/15 transition hover:-translate-y-0.5 hover:bg-[#8f0e1e] lg:flex-none">
-              <Trash2 size={17} className="transition-transform group-hover:-translate-y-0.5 duration-200" />
-              Delete
-            </button>
+            <DeleteBusinessButton
+              businessId={business.id}
+              className="group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#B11226] px-5 py-3 font-semibold text-white shadow-lg shadow-[#B11226]/15 transition hover:-translate-y-0.5 hover:bg-[#8f0e1e] lg:flex-none"
+            />
           </div>
         </motion.header>
 
