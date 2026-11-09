@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/login", "/register", "/dashboard"],
     },
-    sitemap: "https://suvidha.vercel.app/sitemap.xml",
+    sitemap: "https://suvidha-mocha.vercel.app/sitemap.xml",
   };
 }

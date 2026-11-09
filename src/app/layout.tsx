@@ -18,7 +18,7 @@ const myFont = localFont({
 
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://suvidha.vercel.app"),
+  metadataBase: new URL("https://suvidha-mocha.vercel.app/"),
 
   title: {
     default: "Suvidha | Service Management Made Easy",
