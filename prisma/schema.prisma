@@ -42,6 +42,8 @@ model Business {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  services Service[]
+
   @@index([ownerId])
   @@index([category])
 }
@@ -70,4 +72,19 @@ model BusinessLocation {
 
   @@index([businessId])
   @@index([city, postalCode])
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  price       Float
+  duration    Int
+  isActive    Boolean  @default(true)
+  businessId  String
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([businessId])
 }
