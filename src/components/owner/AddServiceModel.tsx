@@ -117,7 +117,7 @@ export default function AddServiceModal({
       onClick={onCloseAction}
     >
       <div
-        className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-3xl border border-black/5 bg-[#fffdf8] p-6 shadow-[0_24px_80px_rgba(43,23,18,0.25)] sm:p-8"
+        className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-3xl border border-black/5 bg-[#fffdf8]  shadow-[0_24px_80px_rgba(43,23,18,0.25)] "
         onClick={(e) => e.stopPropagation()}
       >
         <button

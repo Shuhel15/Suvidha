@@ -7,6 +7,7 @@ import {
   MapPin,
   Pencil,
   Phone,
+  Plus,
   Tag,
 } from "lucide-react";
 import { staggerContainer, springItem } from "../layout/animation";
@@ -41,13 +42,13 @@ const details = [
 
 export default function BusinessDetails({ business }: Props) {
   return (
-    <motion.section 
-    initial="hidden"
-    whileInView="show"
-    viewport={{ once: true, amount: 0.25 }}
-    variants={staggerContainer}
-    className="mt-25">
-
+    <motion.section
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.25 }}
+      variants={staggerContainer}
+      className="mt-25"
+    >
       <div className=" mx-auto max-w-7xl space-y-6">
         <Link
           href="/owner/dashboard"
@@ -60,9 +61,10 @@ export default function BusinessDetails({ business }: Props) {
           Back to dashboard
         </Link>
 
-        <motion.header 
-        variants={springItem as Variants}
-        className="flex flex-col gap-7 rounded-3xl border border-black/5 bg-white/50 p-5 shadow-[0_20px_60px_rgba(80,45,20,0.07)] backdrop-blur-sm sm:p-8 lg:flex-row lg:items-end lg:justify-between">
+        <motion.header
+          variants={springItem as Variants}
+          className="flex flex-col gap-7 rounded-3xl border border-black/5 bg-white/50 p-5 shadow-[0_20px_60px_rgba(80,45,20,0.07)] backdrop-blur-sm sm:p-8 lg:flex-row lg:items-end lg:justify-between"
+        >
           <div className="min-w-0">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#B11226]/15  px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] shadow-inner shadow-black/10 text-[#B11226]">
               <span className="h-1.5 w-1.5 rounded-full bg-[#B11226] animate-pulse" />
@@ -72,30 +74,45 @@ export default function BusinessDetails({ business }: Props) {
               {business.name}
             </h1>
             <p className="font-custom font-semibold mt-3 max-w-2xl text-base leading-7 text-black/60 sm:text-lg">
-              Keep your business profile and locations clear, current, and
-              ready for customers.
+              Keep your business profile and locations clear, current, and ready
+              for customers.
             </p>
           </div>
 
           <div className="flex w-full flex-col gap-3 sm:flex-row lg:w-auto">
-            <Link 
-            href={`/owner/businesses/${business.id}/edit`}
-            className="group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-[#B11226]/25 bg-white/70 px-5 py-3 font-semibold text-[#B11226] transition hover:-translate-y-0.5 hover:border-[#B11226] hover:bg-white lg:flex-none">
-              <Pencil size={17} className="transition-transform group-hover:-translate-x-0.5 duration-200" />
+            <Link
+              href={`/owner/businesses/${business.id}/edit`}
+              className="group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-[#B11226]/25 bg-white/70 px-5 py-3 font-semibold text-[#B11226] transition hover:-translate-y-0.5 hover:border-[#B11226] hover:bg-white lg:flex-none"
+            >
+              <Pencil
+                size={17}
+                className="transition-transform group-hover:-translate-x-0.5 duration-200"
+              />
               Edit business
             </Link>
             <DeleteBusinessButton
               businessId={business.id}
               className="group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#B11226] px-5 py-3 font-semibold text-white shadow-lg shadow-[#B11226]/15 transition hover:-translate-y-0.5 hover:bg-[#8f0e1e] lg:flex-none"
             />
+
+            <Link
+              href={`/owner/businesses/${business.id}/services`}
+              className="group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-[#B11226]/25 bg-white/70 px-5 py-3 font-semibold text-[#B11226] transition hover:-translate-y-0.5 hover:border-[#B11226] hover:bg-white lg:flex-none"
+            >
+              <Plus
+                size={17}
+                className="transition-transform group-hover:rotate-180 duration-600"
+              />
+              Add Services
+            </Link>
           </div>
         </motion.header>
 
-        <div 
-        className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-          <motion.section 
-          variants={springItem as Variants}
-          className="rounded-3xl border border-black/5 bg-white p-6 shadow-[0_12px_35px_rgba(80,45,20,0.06)] sm:p-8">
+        <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+          <motion.section
+            variants={springItem as Variants}
+            className="rounded-3xl border border-black/5 bg-white p-6 shadow-[0_12px_35px_rgba(80,45,20,0.06)] sm:p-8"
+          >
             <div className="flex items-start gap-4">
               <div className="rounded-2xl bg-[#F5EBD0] p-3.5 text-[#B11226] shadow-inner shadow-black/10">
                 <Building2 size={23} />
@@ -128,9 +145,10 @@ export default function BusinessDetails({ business }: Props) {
             </div>
           </motion.section>
 
-          <motion.section 
-          variants={springItem as Variants}
-          className="rounded-3xl border border-[#B11226]/10 bg-[#B11226] p-6 text-white shadow-[0_12px_35px_rgba(177,18,38,0.16)] sm:p-8">
+          <motion.section
+            variants={springItem as Variants}
+            className="rounded-3xl border border-[#B11226]/10 bg-[#B11226] p-6 text-white shadow-[0_12px_35px_rgba(177,18,38,0.16)] sm:p-8"
+          >
             <div className="flex items-start gap-4">
               <div className="rounded-2xl bg-white/15 p-3.5">
                 <FileText size={23} />
@@ -149,9 +167,10 @@ export default function BusinessDetails({ business }: Props) {
           </motion.section>
         </div>
 
-        <motion.section 
-        variants={springItem as Variants}
-        className="rounded-3xl border border-black/5 bg-white p-6 shadow-[0_12px_35px_rgba(80,45,20,0.06)] sm:p-8">
+        <motion.section
+          variants={springItem as Variants}
+          className="rounded-3xl border border-black/5 bg-white p-6 shadow-[0_12px_35px_rgba(80,45,20,0.06)] sm:p-8"
+        >
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div className="flex items-start gap-4">
               <div className="rounded-2xl bg-[#F5EBD0] p-3.5 text-[#B11226] shadow-inner shadow-black/10">

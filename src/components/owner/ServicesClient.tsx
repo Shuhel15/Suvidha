@@ -33,7 +33,7 @@ export default function ServicesClient({ businessId, services }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5EBD0] px-4 py-8 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F5EBD0] ">
       <div className="mx-auto max-w-7xl space-y-8">
         <div className="flex flex-col justify-between gap-6 rounded-3xl border border-black/5 bg-white/55 p-6 shadow-[0_20px_60px_rgba(80,45,20,0.06)] backdrop-blur-sm sm:p-8 md:flex-row md:items-end">
         <div>

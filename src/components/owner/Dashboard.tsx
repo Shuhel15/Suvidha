@@ -62,7 +62,7 @@ export default function OwnerDashboardComp({ businesses }: Props) {
       whileInView="show"
       viewport={{ once: true, amount: 0.25 }}
       variants={staggerContainer}
-      className="relative min-h-screen overflow-hidden bg-[#F5EBD0]  py-10  mt-20"
+      className="relative min-h-screen    py-10  mt-20"
     >
       <div className="relative mx-auto max-w-7xl space-y-8">
         {/* Header */}
@@ -170,21 +170,23 @@ export default function OwnerDashboardComp({ businesses }: Props) {
               return (
                 <div
                   key={business.id}
-                  className="group rounded-2xl border border-black/5 bg-white p-6 shadow-[0_12px_35px_rgba(80,45,20,0.05)] transition-all duration-200 hover:-translate-y-1 hover:border-[#B11226]/30 hover:shadow-[0_18px_40px_rgba(80,45,20,0.1)]"
+                  className="group relative overflow-hidden rounded-3xl border border-black/5 bg-white p-5 shadow-[0_12px_35px_rgba(80,45,20,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-[#B11226]/25 hover:shadow-[0_22px_45px_rgba(80,45,20,0.12)] sm:p-6"
                 >
+                  <div className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-[#B11226] via-[#D49A3A] to-[#B11226]/20" />
+
                   {/* Business Details Link */}
                   <Link
                     href={`/owner/businesses/${business.id}`}
-                    className="group block"
+                    className="group block rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#B11226] focus-visible:ring-offset-4"
                   >
                     <div className="flex items-start justify-between">
                       <div
-                        className={`rounded-2xl p-3.5 shadow-inner shadow-black/10 ${iconColor}`}
+                        className={`rounded-2xl p-3.5 shadow-[inset_0_1px_2px_rgba(255,255,255,0.65),0_8px_18px_rgba(80,45,20,0.08)] transition-transform duration-300 group-hover:scale-105 ${iconColor}`}
                       >
                         <Icon size={24} />
                       </div>
 
-                      <span className="rounded-full bg-gray-50 p-2 text-gray-400 shadow-inner transition group-hover:bg-[#B11226]/10 group-hover:text-[#B11226]">
+                      <span className="rounded-full border border-black/5 bg-[#FCFAF5] p-2 text-gray-400 shadow-inner transition group-hover:border-[#B11226]/15 group-hover:bg-[#B11226]/10 group-hover:text-[#B11226]">
                         <ArrowUpRight
                           size={18}
                           className="transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
@@ -192,11 +194,15 @@ export default function OwnerDashboardComp({ businesses }: Props) {
                       </span>
                     </div>
 
-                    <h2 className="mt-6 truncate text-xl font-bold text-gray-900">
+                    <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.2em] text-black/35">
+                      Business profile
+                    </p>
+
+                    <h2 className="mt-1 truncate text-xl font-bold tracking-tight text-gray-900">
                       {business.name}
                     </h2>
 
-                    <span className="mt-2 inline-flex rounded-full bg-[#B11226]/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-[#B11226] shadow-inner shadow-black/10">
+                    <span className="mt-2 inline-flex rounded-full bg-[#B11226]/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#B11226] shadow-inner shadow-black/10">
                       {business.category}
                     </span>
 
@@ -208,13 +214,13 @@ export default function OwnerDashboardComp({ businesses }: Props) {
                         : "Location not added"}
                     </div>
 
-                    <p className="mt-2 flex items-center gap-2  border-t border-black/5 pt-3 text-sm text-gray-500">
-                    <Phone size={16} className="shrink-0 text-[#B11226] transition-transform group-hover:-translate-x-0.5 duration-200" />
+                    <p className="mt-3 flex items-center gap-2 border-t border-black/5 pt-3 text-sm text-gray-500">
+                      <Phone size={16} className="shrink-0 text-[#B11226] transition-transform duration-200 group-hover:-translate-x-0.5" />
                       {business.phone}
                     </p>
                   </Link>
 
-                  {/* Edit and Delete Actions */}
+                  {/* Edit, add services and Delete Actions */}
                   <div className="mt-5 border-t border-black/5 pt-4">
                     <BusinessActions businessId={business.id} />
                   </div>
