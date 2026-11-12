@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const BASE_URL = "https://suvidha-mocha.vercel.app/";
+const BASE_URL = "https://suvidha-mocha.vercel.app";
 
 const routes = ["",  "/services"];
 
