@@ -1,7 +1,7 @@
 "use client";
 
 import { Handshake } from "lucide-react";
-import SearchBar from "../landing/SearchBar";
+import SearchBar from "@/components/landing/SearchBar";
 import { motion, type Variants } from "framer-motion";
 import { springItem, staggerContainer } from "@/components/layout/animation";
 import {useSession} from "next-auth/react"

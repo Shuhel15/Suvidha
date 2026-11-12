@@ -1,4 +1,4 @@
-import ServicesComp from "@/components/services/Services";
+import ServicesComp from "@/components/owner/services/Services";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
