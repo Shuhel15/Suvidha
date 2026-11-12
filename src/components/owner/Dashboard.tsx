@@ -52,7 +52,7 @@ export default function OwnerDashboardComp({ businesses }: Props) {
     setLoading(true);
 
     await signOut({
-      callbackUrl: "/login",
+      callbackUrl: "/",
     });
   };
 

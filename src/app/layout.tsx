@@ -15,8 +15,6 @@ const myFont = localFont({
   variable: "--font-my-font",
 });
 
-
-
 export const metadata: Metadata = {
   metadataBase: new URL("https://suvidha-mocha.vercel.app/"),
 
@@ -27,6 +25,9 @@ export const metadata: Metadata = {
 
   description:
     "Discover trusted local services, book appointments, skip long queues, and track your service requests in real time. Manage everyday services easily with Suvidha.",
+  verification: {
+    google: "6CVFv23yoo0HObZR8qEBQMtQBHwDecH-zUXYjwwjIA4",
+  },
 
   keywords: [
     "Suvidha",
@@ -89,10 +90,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className={`${myFont.variable}`}
-    >
+    <html lang="en" className={`${myFont.variable}`}>
       <body className="min-h-full flex flex-col bg-[#F5EBD0]">
         <Toaster
           position="top-center"
