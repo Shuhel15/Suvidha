@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowLeft, Building2, MapPin, Save } from "lucide-react";
+import { ArrowLeft, Building2, Clock3, Copy, MapPin, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
@@ -26,8 +26,25 @@ type Props = {
       postalCode: string;
       phone: string | null;
     }[];
+    hours: {
+      id: string;
+      dayOfWeek: number;
+      openTime: string | null;
+      closeTime: string | null;
+      isClosed: boolean;
+    }[];
   };
 };
+
+const weekDays = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
 
 const fieldClass =
   "w-full rounded-xl border border-[#d9cdb5] bg-[#fffdf8] px-4 py-3.5 text-sm text-[#201b17] shadow-[0_1px_2px_rgba(54,38,20,0.04)] outline-none transition placeholder:text-[#9b9185] hover:border-[#b8a78d] focus:border-[#B11226] focus:ring-4 focus:ring-[#B11226]/10";
@@ -50,6 +67,18 @@ export default function EditBusinessForm({ business }: Props) {
       postalCode: business.locations[0]?.postalCode || "",
       phone: business.locations[0]?.phone || "",
     },
+    hours: weekDays.map((_, index) => {
+      const existingHour = business.hours.find(
+        (hour) => hour.dayOfWeek === index + 1,
+      );
+
+      return {
+        dayOfWeek: index + 1,
+        openTime: existingHour?.openTime ?? "10:00",
+        closeTime: existingHour?.closeTime ?? "19:00",
+        isClosed: existingHour?.isClosed ?? false,
+      };
+    }),
   });
 
   const router = useRouter();
@@ -79,6 +108,41 @@ export default function EditBusinessForm({ business }: Props) {
         [name]: value,
       },
     }));
+  };
+
+  const handleHoursChange = (
+    dayOfWeek: number,
+    field: "openTime" | "closeTime" | "isClosed",
+    value: string | boolean,
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      hours: prev.hours.map((hour) =>
+        hour.dayOfWeek === dayOfWeek ? { ...hour, [field]: value } : hour,
+      ),
+    }));
+  };
+
+  const handleApplyToWeekdays = () => {
+    setFormData((prev) => {
+      const monday = prev.hours.find((hour) => hour.dayOfWeek === 1);
+
+      if (!monday) return prev;
+
+      return {
+        ...prev,
+        hours: prev.hours.map((hour) =>
+          hour.dayOfWeek !== 1
+            ? {
+                ...hour,
+                openTime: monday.openTime,
+                closeTime: monday.closeTime,
+                isClosed: monday.isClosed,
+              }
+            : hour,
+        ),
+      };
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -119,11 +183,12 @@ export default function EditBusinessForm({ business }: Props) {
 
   return (
     <motion.section
-    initial="hidden"
-    whileInView="show"
-    viewport={{ once: true, amount: 0.25 }}
-    variants={staggerContainer}
-     className="relative mt-30">
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.25 }}
+      variants={staggerContainer}
+      className="relative mt-30"
+    >
       <form
         onSubmit={handleSubmit}
         aria-busy={loading}
@@ -141,17 +206,17 @@ export default function EditBusinessForm({ business }: Props) {
         </Link>
 
         <motion.header
-        variants={staggerContainer}
-         className="mb-10 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
-          <motion.div
-            variants={springItem as Variants}
-          >
+          variants={staggerContainer}
+          className="mb-10 flex flex-col justify-between gap-6 sm:flex-row sm:items-end"
+        >
+          <motion.div variants={springItem as Variants}>
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#B11226]/15 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-[#B11226] shadow-inner shadow-black/10">
               <span className="h-1.5 w-1.5 rounded-full bg-[#B11226] animate-pulse" />
               Business settings
             </div>
             <h1 className="max-w-2xl text-4xl font-black tracking-[-0.04em] text-[#201b17] sm:text-5xl">
-              Refine your business <span className="text-[#B11226]">presence.</span>
+              Refine your business{" "}
+              <span className="text-[#B11226]">presence.</span>
             </h1>
             <p className="p-text mt-3 font-semibold text-start">
               Keep your profile and location details accurate for every customer
@@ -159,9 +224,10 @@ export default function EditBusinessForm({ business }: Props) {
             </p>
           </motion.div>
 
-          <motion.div 
-          variants={springItem as Variants}
-          className="hidden shrink-0 items-center gap-3 rounded-2xl border border-[#d9cdb5] bg-[#fffaf0]/75 p-3 shadow-sm sm:flex">
+          <motion.div
+            variants={springItem as Variants}
+            className="hidden shrink-0 items-center gap-3 rounded-2xl border border-[#d9cdb5] bg-[#fffaf0]/75 p-3 shadow-sm sm:flex"
+          >
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#B11226] text-white">
               <Save className="h-5 w-5" />
             </div>
@@ -175,9 +241,10 @@ export default function EditBusinessForm({ business }: Props) {
         </motion.header>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <motion.section 
-          variants={springItem as Variants}
-          className="rounded-[1.75rem] border border-[#d9cdb5] bg-[#fffaf0]/90 p-6 shadow-[0_18px_50px_rgba(91,61,24,0.07)] sm:p-8">
+          <motion.section
+            variants={springItem as Variants}
+            className="rounded-[1.75rem] border border-[#d9cdb5] bg-[#fffaf0]/90 p-6 shadow-[0_18px_50px_rgba(91,61,24,0.07)] sm:p-8"
+          >
             <div className="mb-8 flex items-start gap-4">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#B11226]/10 text-[#B11226]">
                 <Building2 className="h-5 w-5" />
@@ -262,8 +329,9 @@ export default function EditBusinessForm({ business }: Props) {
           </motion.section>
 
           <motion.section
-          variants={springItem as Variants}
-          className="rounded-[1.75rem] border border-[#d9cdb5] bg-[#fffaf0]/90 p-6 shadow-[0_18px_50px_rgba(91,61,24,0.07)] sm:p-8">
+            variants={springItem as Variants}
+            className="rounded-[1.75rem] border border-[#d9cdb5] bg-[#fffaf0]/90 p-6 shadow-[0_18px_50px_rgba(91,61,24,0.07)] sm:p-8"
+          >
             <div className="mb-8 flex items-start gap-4">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#B11226]/10 text-[#B11226]">
                 <MapPin className="h-5 w-5" />
@@ -359,9 +427,111 @@ export default function EditBusinessForm({ business }: Props) {
           </motion.section>
         </div>
 
-        <motion.footer 
-        variants={springItem as Variants}
-        className="flex flex-col-reverse gap-3 pt-6 sm:flex-row sm:justify-end">
+        {/* Opening Hours */}
+        <motion.section
+          variants={springItem as Variants}
+          className="mt-6 rounded-[1.75rem] border border-[#d9cdb5] bg-[#fffaf0]/90 p-6 shadow-[0_18px_50px_rgba(91,61,24,0.07)] sm:p-8"
+        >
+          <div className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+            <div className="flex items-start gap-4">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#B11226]/10 text-[#B11226]">
+                <Clock3 className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#B11226]">
+                  Step 03
+                </p>
+                <h2 className="mt-1 text-xl font-black text-[#201b17]">
+                  Opening hours
+                </h2>
+                <p className="mt-1 max-w-lg text-sm leading-6 text-[#806f5d]">
+                  Tell customers when they can visit or contact you.
+                </p>
+              </div>
+            </div>
+            <span className="w-fit rounded-full border border-[#d9cdb5] bg-white/70 px-3 py-1.5 text-xs font-bold text-[#806f5d]">
+              7 days
+            </span>
+          </div>
+
+          <div className="mb-5 flex flex-col gap-3 rounded-2xl border border-[#d9cdb5] bg-[#eadfbe]/45 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm font-bold text-[#332a23]">Same schedule every day?</p>
+              <p className="mt-0.5 text-xs text-[#806f5d]">
+                Copy Monday&apos;s timing to the rest of the week.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleApplyToWeekdays}
+              disabled={loading}
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#B11226]/20 bg-[#fffaf0] px-4 py-2.5 text-sm font-bold text-[#B11226] transition hover:-translate-y-0.5 hover:border-[#B11226]/40 hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Copy className="h-4 w-4" />
+              Copy Monday
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {formData.hours.map((hour) => (
+              <div
+                key={hour.dayOfWeek}
+                className={`grid gap-4 rounded-2xl border p-4 transition sm:grid-cols-[minmax(7rem,0.8fr)_1fr_1fr_auto] sm:items-end ${
+                  hour.isClosed
+                    ? "border-[#d9cdb5] bg-[#eadfbe]/25"
+                    : "border-[#d9cdb5] bg-white/60 hover:border-[#B11226]/25 hover:shadow-sm"
+                }`}
+              >
+                <div className="flex items-center gap-3 sm:self-center">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#B11226]/10 text-xs font-black text-[#B11226]">
+                    {String(hour.dayOfWeek).padStart(2, "0")}
+                  </span>
+                  <p className="font-bold text-[#332a23]">
+                    {weekDays[hour.dayOfWeek - 1]}
+                  </p>
+                </div>
+
+                {[
+                  { label: "Opens", field: "openTime" as const, value: hour.openTime ?? "" },
+                  { label: "Closes", field: "closeTime" as const, value: hour.closeTime ?? "" },
+                ].map(({ label, field, value }) => (
+                  <label key={field} className="block">
+                    <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-[#806f5d]">
+                      {label}
+                    </span>
+                    <input
+                      type="time"
+                      value={value}
+                      disabled={hour.isClosed || loading}
+                      onChange={(e) =>
+                        handleHoursChange(hour.dayOfWeek, field, e.target.value)
+                      }
+                      className={`${fieldClass} disabled:cursor-not-allowed disabled:bg-[#eadfbe]/40 disabled:text-[#9b9185]`}
+                    />
+                  </label>
+                ))}
+
+                <label className="flex min-h-12 cursor-pointer items-center gap-2.5 rounded-xl border border-[#d9cdb5] bg-[#fffaf0] px-3 text-sm font-bold text-[#332a23] transition hover:border-[#B11226]/30 has-[:checked]:border-[#B11226]/30 has-[:checked]:bg-[#B11226]/5 has-[:checked]:text-[#B11226]">
+                  <input
+                    type="checkbox"
+                    checked={hour.isClosed}
+                    disabled={loading}
+                    onChange={(e) =>
+                      handleHoursChange(hour.dayOfWeek, "isClosed", e.target.checked)
+                    }
+                    className="h-4 w-4 accent-[#B11226]"
+                  />
+                  Closed
+                </label>
+              </div>
+            ))}
+          </div>
+        </motion.section>
+
+        <motion.footer
+          variants={springItem as Variants}
+          className="flex flex-col-reverse gap-3 pt-6 sm:flex-row sm:justify-end"
+        >
           <button
             type="button"
             onClick={() => router.back()}

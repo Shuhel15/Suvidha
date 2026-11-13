@@ -35,6 +35,11 @@ export async function getBusinessDetails(
         orderBy:{
           createdAt:"asc"
         }
+      },
+      hours:{
+        orderBy:{
+          dayOfWeek:"asc"
+        }
       }
     }
   })

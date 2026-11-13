@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { location, ...businessData } = validation.data;
+    const { location, hours, ...businessData } = validation.data;
 
     //Create business and its first location
     const business = await prisma.business.create({
@@ -41,10 +41,14 @@ export async function POST(request: NextRequest) {
             ...location,
           },
         },
+        hours: {
+          create: hours,
+        },
       },
 
       include: {
         locations: true,
+        hours: true,
       },
     });
 
@@ -68,4 +72,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

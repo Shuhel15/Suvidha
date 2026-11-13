@@ -34,66 +34,91 @@ export async function PATCH(request: NextRequest, { params }: Props) {
       );
     }
 
-    const { name, description, category, phone, location } = validation.data;
+    const { name, description, category, phone, location, hours } =
+      validation.data;
 
-    const updatedBusiness = await prisma.$transaction(async (tx) => {
-      //Check ownership and get first location
-      const existingBusiness = await tx.business.findFirst({
-        where: {
-          id: businessId,
-          ownerId: session!.user.id,
-        },
-        include: {
-          locations: {
-            orderBy: {
-              createdAt: "asc",
-            },
-            take: 1,
-          },
-        },
-      });
-
-      if (!existingBusiness) return null;
-
-      //Update business info.
-      await tx.business.update({
-        where: {
-          id: businessId,
-        },
-        data: {
-          name,
-          description: description || null,
-          category,
-          phone,
-        },
-      });
-
-      //Update first branch location
-      const firstLocation = existingBusiness.locations[0];
-
-      if (firstLocation) {
-        await tx.businessLocation.update({
+    const updatedBusiness = await prisma.$transaction(
+      async (tx) => {
+        //Check ownership and get first location
+        const existingBusiness = await tx.business.findFirst({
           where: {
-            id: firstLocation.id,
+            id: businessId,
+            ownerId: session!.user.id,
           },
-          data: {
-            branchName: location.branchName || null,
-            addressLine: location.addressLine,
-            area: location.area || null,
-            city: location.city,
-            state: location.state,
-            postalCode: location.postalCode,
-            phone: location.phone || null,
+          include: {
+            locations: {
+              orderBy: {
+                createdAt: "asc",
+              },
+              take: 1,
+            },
           },
         });
-      }
-      return true;
-    },
-    {
-      maxWait: 10000,
-      timeout: 20000
-    }
-  );
+
+        if (!existingBusiness) return null;
+
+        //Update business info.
+        await tx.business.update({
+          where: {
+            id: businessId,
+          },
+          data: {
+            name,
+            description: description || null,
+            category,
+            phone,
+          },
+        });
+
+        //Update first branch location
+        const firstLocation = existingBusiness.locations[0];
+
+        if (firstLocation) {
+          await tx.businessLocation.update({
+            where: {
+              id: firstLocation.id,
+            },
+            data: {
+              branchName: location.branchName || null,
+              addressLine: location.addressLine,
+              area: location.area || null,
+              city: location.city,
+              state: location.state,
+              postalCode: location.postalCode,
+              phone: location.phone || null,
+            },
+          });
+        }
+        // Update business opening hours
+        for (const hour of hours) {
+          await tx.businessHours.upsert({
+            where: {
+              businessId_dayOfWeek: {
+                businessId,
+                dayOfWeek: hour.dayOfWeek,
+              },
+            },
+            update: {
+              openTime: hour.openTime,
+              closeTime: hour.closeTime,
+              isClosed: hour.isClosed,
+            },
+            create: {
+              businessId,
+              dayOfWeek: hour.dayOfWeek,
+              openTime: hour.openTime,
+              closeTime: hour.closeTime,
+              isClosed: hour.isClosed,
+            },
+          });
+        }
+        return true;
+      },
+      {
+        maxWait: 10000,
+        timeout: 20000,
+      },
+    );
 
     if (!updatedBusiness) {
       return NextResponse.json(

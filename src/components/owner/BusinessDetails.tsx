@@ -3,6 +3,7 @@ import Link from "next/link";
 import {
   ArrowLeft,
   Building2,
+  Clock,
   FileText,
   MapPin,
   Pencil,
@@ -31,6 +32,13 @@ type Props = {
       postalCode: string;
       phone: string | null;
     }[];
+    hours: {
+      id: string;
+      dayOfWeek: number;
+      openTime: string | null;
+      closeTime: string | null;
+      isClosed: boolean;
+    }[];
   };
 };
 
@@ -39,6 +47,27 @@ const details = [
   { label: "Category", key: "category", icon: Tag },
   { label: "Contact number", key: "phone", icon: Phone },
 ] as const;
+
+const weekDays = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+
+function formatTime(time: string | null) {
+  if (!time) return "";
+
+  const [hours, minutes] = time.split(":").map(Number);
+
+  const period = hours >= 12 ? "PM" : "AM";
+  const formattedHours = hours % 12 || 12;
+
+  return `${String(formattedHours).padStart(2, "0")}:${String(minutes).padStart(2, "0")} ${period}`;
+}
 
 export default function BusinessDetails({ business }: Props) {
   return (
@@ -245,6 +274,71 @@ export default function BusinessDetails({ business }: Props) {
               </p>
             </div>
           )}
+        </motion.section>
+
+        <motion.section
+          variants={springItem as Variants}
+          className="rounded-3xl border border-black/5 bg-white p-6 shadow-[0_12px_35px_rgba(80,45,20,0.06)] sm:p-8"
+        >
+          <div className="flex items-center gap-4">
+            <div className="rounded-2xl bg-[#F5EBD0] p-3.5 text-[#B11226] shadow-inner shadow-black/10">
+              <Clock size={23} />
+            </div>
+
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#B11226]">
+                Weekly schedule
+              </p>
+              <h2 className="mt-1 text-2xl font-bold text-gray-900">
+                Opening Hours
+              </h2>
+            </div>
+          </div>
+
+          <div className="mt-8 space-y-3">
+            {business.hours.length > 0 ? (
+              weekDays.map((day, index) => {
+                const schedule = business.hours.find(
+                  (hour) => hour.dayOfWeek === index + 1,
+                );
+
+                return (
+                  <div
+                    key={day}
+                    className="flex items-center justify-between gap-4 rounded-2xl border border-black/5 bg-[#F5EBD0]/35 px-5 py-4"
+                  >
+                    <span className="font-semibold text-gray-800">{day}</span>
+
+                    {schedule ? (
+                      schedule.isClosed ? (
+                        <span className="rounded-full bg-red-50 px-3 py-1.5 text-xs font-bold text-red-600">
+                          Closed
+                        </span>
+                      ) : (
+                        <span className="text-sm font-semibold text-gray-700 bg-emerald-400/20 py-2 px-3 rounded-full shadow-inner shadow-black/5">
+                          {formatTime(schedule.openTime)} - {formatTime(schedule.closeTime)}
+                        </span>
+                      )
+                    ) : (
+                      <span className="text-sm text-gray-400">
+                        Timings not available
+                      </span>
+                    )}
+                  </div>
+                );
+              })
+            ) : (
+              <div className="rounded-2xl border border-dashed border-[#B11226]/20 bg-[#F5EBD0]/35 p-8 text-center">
+                <Clock size={26} className="mx-auto text-[#B11226]" />
+                <p className="mt-3 font-semibold text-gray-800">
+                  Timings not available
+                </p>
+                <p className="mt-1 text-sm text-gray-500">
+                  Business opening hours have not been configured yet.
+                </p>
+              </div>
+            )}
+          </div>
         </motion.section>
       </div>
     </motion.section>

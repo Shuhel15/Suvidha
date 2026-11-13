@@ -186,11 +186,13 @@ export default function OwnerDashboardComp({ businesses }: Props) {
                         <Icon size={24} />
                       </div>
 
-                      <span className="rounded-full border border-black/5 bg-[#FCFAF5] p-2 text-gray-400 shadow-inner transition group-hover:border-[#B11226]/15 group-hover:bg-[#B11226]/10 group-hover:text-[#B11226]">
+                      <span className=" text-xs rounded-full flex flex-row justify-center items-center gap-1 border border-black/10  p-1 text-gray-400 shadow-inner shadow-black/5 transition-all group-hover:border-[#B11226]/15 group-hover:bg-[#B11226]/10 group-hover:text-[#B11226]">
+                        View More
                         <ArrowUpRight
-                          size={18}
+                          size={15}
                           className="transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                         />
+                      
                       </span>
                     </div>
 
