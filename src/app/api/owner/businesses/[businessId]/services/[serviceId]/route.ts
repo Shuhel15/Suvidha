@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/auth-guard";
-import { createServiceSchema } from "@/validations/service.validation";
+import {
+  updateServiceStatusSchema,
+  createServiceSchema,
+} from "@/validations/service.validation";
 
 type Props = {
   params: Promise<{
@@ -10,6 +13,7 @@ type Props = {
   }>;
 };
 // Edit services
+
 export async function PATCH(request: NextRequest, { params }: Props) {
   try {
     const { session, response } = await requireRole("BUSINESS_OWNER");
@@ -19,19 +23,47 @@ export async function PATCH(request: NextRequest, { params }: Props) {
     const { businessId, serviceId } = await params;
     const body = await request.json();
 
-    const validation = createServiceSchema.safeParse(body);
+    let updateData;
 
-    if (!validation.success) {
-      return NextResponse.json(
-        {
-          success: false,
-          errors: validation.error.issues.map((issue) => ({
-            field: issue.path.join("."),
-            message: issue.message,
-          })),
-        },
-        { status: 400 },
-      );
+    // Status-only update
+    if (
+      typeof body === "object" &&
+      body !== null &&
+      !Array.isArray(body) &&
+      Object.keys(body).length === 1 &&
+      "isActive" in body
+    ) {
+      const validation = updateServiceStatusSchema.safeParse(body);
+
+      if (!validation.success) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Invalid service status",
+          },
+          { status: 400 },
+        );
+      }
+
+      updateData = validation.data;
+    } else {
+      // Full service update
+      const validation = createServiceSchema.safeParse(body);
+
+      if (!validation.success) {
+        return NextResponse.json(
+          {
+            success: false,
+            errors: validation.error.issues.map((issue) => ({
+              field: issue.path.join("."),
+              message: issue.message,
+            })),
+          },
+          { status: 400 },
+        );
+      }
+
+      updateData = validation.data;
     }
 
     const result = await prisma.service.updateMany({
@@ -42,7 +74,7 @@ export async function PATCH(request: NextRequest, { params }: Props) {
           ownerId: session!.user.id,
         },
       },
-      data: validation.data,
+      data: updateData,
     });
 
     if (result.count === 0) {
@@ -70,12 +102,12 @@ export async function PATCH(request: NextRequest, { params }: Props) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("Error uodating service:", error);
+    console.error("Error updating service:", error);
 
     return NextResponse.json(
       {
         success: false,
-        message: "An error occurred while updating the service",
+        message: "Internal server error",
       },
       { status: 500 },
     );
@@ -83,7 +115,6 @@ export async function PATCH(request: NextRequest, { params }: Props) {
 }
 
 //Delete Services
-
 export async function DELETE(request: NextRequest, { params }: Props) {
   try {
     const { session, response } = await requireRole("BUSINESS_OWNER");

@@ -181,7 +181,7 @@ export default function OwnerDashboardComp({ businesses }: Props) {
                   >
                     <div className="flex items-start justify-between">
                       <div
-                        className={`rounded-2xl p-3.5 shadow-[inset_0_1px_2px_rgba(255,255,255,0.65),0_8px_18px_rgba(80,45,20,0.08)] transition-transform duration-300 group-hover:scale-105 ${iconColor}`}
+                        className={`rounded-2xl p-3.5 shadow-inner shadow-black/10 transition-transform duration-300 group-hover:scale-105 ${iconColor}`}
                       >
                         <Icon size={24} />
                       </div>

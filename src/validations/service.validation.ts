@@ -27,3 +27,10 @@ export const createServiceSchema = z.object({
 export type CreateServiceInput = z.infer<
   typeof createServiceSchema
 >;
+
+
+export const updateServiceStatusSchema = z.object({
+  isActive: z.boolean({
+    error: "Invalid service status",
+  }),
+});
