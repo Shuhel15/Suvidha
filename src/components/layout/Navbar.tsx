@@ -69,7 +69,7 @@ export default function Navbar() {
           <motion.div key={link.href} variants={fadeInUp}>
             <Link
               href={link.href}
-              className={`text-black/50 font-semibold px-2 py-0.5 rounded-lg ${
+                  className={`px-2 py-1 text-black/50 font-semibold hover:shadow-inner shadow-black/10 rounded-lg transition-all duration-200 hover:scale-105 active:scale-100 ${
                 pathname === link.href
                   ? "shadow-inner shadow-black/10 bg-[#EDE0BE]"
                   : ""

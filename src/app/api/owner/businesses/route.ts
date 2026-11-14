@@ -11,8 +11,19 @@ export async function POST(request: NextRequest) {
 
     if (response) return response;
 
-    const body = await request.json();
+    let body;
 
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Invalid JSON request body",
+        },
+        { status: 400 },
+      );
+    }
     const validation = createBusinessSchema.safeParse(body);
 
     if (!validation.success) {
