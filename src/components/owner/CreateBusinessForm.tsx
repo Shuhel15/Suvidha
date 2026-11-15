@@ -14,6 +14,11 @@ import {
 } from "lucide-react";
 import { staggerContainer, springItem } from "../layout/animation";
 import { motion, type Variants } from "framer-motion";
+import dynamic from "next/dynamic";
+
+const BusinessLocationMap = dynamic(() => import("./BusinessLocationMap"), {
+  ssr: false,
+});
 
 const fieldClass =
   "w-full rounded-xl border border-[#d9cdb5] bg-[#fffdf8] px-4 py-3.5 text-sm text-[#201b17] shadow-[0_1px_2px_rgba(54,38,20,0.04)] outline-none transition placeholder:text-[#9b9185] hover:border-[#b8a78d] focus:border-[#B11226] focus:ring-4 focus:ring-[#B11226]/10";
@@ -56,6 +61,18 @@ export default function CreateBusinessForm() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const [geocoding, setGeocoding] = useState(false);
+
+  const [locationCoordinates, setLocationCoordinates] = useState<{
+    latitude: number;
+    longitude: number;
+    displayName: string;
+    matchedLevel: string;
+  } | null>(null);
+
+  const [reverseGeocoding, setReverseGeocoding] = useState(false);
+  const [verifiedAddress, setVerifiedAddress] = useState<string | null>(null);
+
   const handleBusinessChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -72,6 +89,11 @@ export default function CreateBusinessForm() {
   const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
+    if (["addressLine", "area", "city", "state", "postalCode"].includes(name)) {
+      setLocationCoordinates(null);
+      setVerifiedAddress(null);
+    }
+
     setFormData((prev) => ({
       ...prev,
       location: {
@@ -79,6 +101,90 @@ export default function CreateBusinessForm() {
         [name]: value,
       },
     }));
+  };
+
+  //Geocoding handler
+  const handleGeocode = async () => {
+    if (geocoding || loading) return;
+
+    const { addressLine, area, city, state, postalCode } = formData.location;
+
+    if (!addressLine || !city || !state || !postalCode) {
+      toast.error("Please fill in the complete address first");
+      return;
+    }
+
+    try {
+      setGeocoding(true);
+
+      const address = [addressLine, area, city, state, postalCode, "India"]
+        .filter(Boolean)
+        .join(", ");
+
+      const response = await fetch("/api/geocoding", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ address }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        toast.error(result.message || "Unable to find this location");
+        return;
+      }
+
+      setLocationCoordinates({
+        latitude: result.coordinates.latitude,
+        longitude: result.coordinates.longitude,
+        displayName: result.displayName,
+        matchedLevel: result.matchedLevel,
+      });
+
+      toast.success("Location found! Please verify the map pin.");
+    } catch (error) {
+      console.error("Geocoding error:", error);
+      toast.error("Unable to find your location");
+    } finally {
+      setGeocoding(false);
+    }
+  };
+
+  //Reverse geocoding handler
+  const handleReverseGeocode = async () => {
+    if (!locationCoordinates || reverseGeocoding || loading) return;
+
+    try {
+      setReverseGeocoding(true);
+
+      const response = await fetch("/api/reverse-geocoding", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          latitude: locationCoordinates.latitude,
+          longitude: locationCoordinates.longitude,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        toast.error(result.message || "Unable to retrieve address");
+        return;
+      }
+
+      setVerifiedAddress(result.displayName);
+      toast.success("Selected location address retrieved!");
+    } catch (error) {
+      console.error("Reverse geocoding error:", error);
+      toast.error("Unable to retrieve address");
+    } finally {
+      setReverseGeocoding(false);
+    }
   };
 
   const handleHoursChange = (
@@ -103,7 +209,7 @@ export default function CreateBusinessForm() {
       return {
         ...prev,
         hours: prev.hours.map((hour) =>
-         hour.dayOfWeek !== 1
+          hour.dayOfWeek !== 1
             ? {
                 ...hour,
                 openTime: monday.openTime,
@@ -128,7 +234,19 @@ export default function CreateBusinessForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+
+        body: JSON.stringify({
+          ...formData,
+          location: {
+            ...formData.location,
+            ...(locationCoordinates
+              ? {
+                  latitude: locationCoordinates.latitude,
+                  longitude: locationCoordinates.longitude,
+                }
+              : {}),
+          },
+        }),
       });
 
       const result = await response.json();
@@ -405,6 +523,107 @@ export default function CreateBusinessForm() {
                   />
                 </div>
               </div>
+              <div className="space-y-4">
+                <button
+                  type="button"
+                  onClick={handleGeocode}
+                  disabled={geocoding || loading}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#B11226] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#8f0e1e] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {geocoding ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Finding location...
+                    </>
+                  ) : (
+                    <>
+                      <MapPin className="h-4 w-4" />
+                      Find on map
+                    </>
+                  )}
+                </button>
+
+                {locationCoordinates && (
+                  <div className="space-y-3">
+                    <div className="rounded-xl border border-[#d9cdb5] bg-[#eadfbe]/40 p-4">
+                      <p className="text-sm font-bold text-[#332a23]">
+                        Location found
+                      </p>
+
+                      <p className="mt-1 text-xs text-[#806f5d]">
+                        {locationCoordinates.displayName}
+                      </p>
+
+                      {locationCoordinates.matchedLevel !== "full_address" && (
+                        <p className="mt-2 text-xs font-medium text-[#B11226]">
+                          Approximate {locationCoordinates.matchedLevel}{" "}
+                          location. Please adjust the pin to your exact business
+                          location.
+                        </p>
+                      )}
+                    </div>
+
+                    <p className="text-sm font-semibold text-[#332a23]">
+                      Adjust your business location
+                    </p>
+
+                    <p className="text-xs text-[#806f5d]">
+                      Drag the marker or click on the map to select your exact
+                      location.
+                    </p>
+
+                    <BusinessLocationMap
+                      key={`${locationCoordinates.latitude}-${locationCoordinates.longitude}`}
+                      latitude={locationCoordinates.latitude}
+                      longitude={locationCoordinates.longitude}
+                      onLocationChangeAction={(latitude, longitude) => {
+                        setVerifiedAddress(null);
+
+                        setLocationCoordinates((prev) =>
+                          prev ? { ...prev, latitude, longitude } : null,
+                        );
+                      }}
+                    />
+
+                    <p className="text-xs text-[#806f5d]">
+                      Selected coordinates:{" "}
+                      {locationCoordinates.latitude.toFixed(6)},{" "}
+                      {locationCoordinates.longitude.toFixed(6)}
+                    </p>
+
+                    <button
+                      type="button"
+                      onClick={handleReverseGeocode}
+                      disabled={reverseGeocoding || loading}
+                      className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#B11226]/20 bg-[#fffaf0] px-5 py-3 text-sm font-bold text-[#B11226] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {reverseGeocoding ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Getting address...
+                        </>
+                      ) : (
+                        <>
+                          <MapPin className="h-4 w-4" />
+                          Get address for this pin
+                        </>
+                      )}
+                    </button>
+
+                    {verifiedAddress && (
+                      <div className="rounded-xl border border-green-200 bg-green-50 p-4">
+                        <p className="text-sm font-bold text-green-800">
+                          Selected location address
+                        </p>
+
+                        <p className="mt-1 text-sm leading-6 text-green-700">
+                          {verifiedAddress}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
               <div>
                 <label className={labelClass} htmlFor="branch-phone">
                   Branch phone{" "}
@@ -453,7 +672,9 @@ export default function CreateBusinessForm() {
 
           <div className="mb-5 flex flex-col gap-3 rounded-2xl border border-[#d9cdb5] bg-[#eadfbe]/45 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm font-bold text-[#332a23]">Same schedule every day?</p>
+              <p className="text-sm font-bold text-[#332a23]">
+                Same schedule every day?
+              </p>
               <p className="mt-0.5 text-xs text-[#806f5d]">
                 Copy Monday&apos;s timing to the rest of the week.
               </p>
@@ -489,8 +710,16 @@ export default function CreateBusinessForm() {
                 </div>
 
                 {[
-                  { label: "Opens", field: "openTime" as const, value: hour.openTime },
-                  { label: "Closes", field: "closeTime" as const, value: hour.closeTime },
+                  {
+                    label: "Opens",
+                    field: "openTime" as const,
+                    value: hour.openTime,
+                  },
+                  {
+                    label: "Closes",
+                    field: "closeTime" as const,
+                    value: hour.closeTime,
+                  },
                 ].map(({ label, field, value }) => (
                   <label key={field} className="block">
                     <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-[#806f5d]">
@@ -514,7 +743,11 @@ export default function CreateBusinessForm() {
                     checked={hour.isClosed}
                     disabled={loading}
                     onChange={(e) =>
-                      handleHoursChange(hour.dayOfWeek, "isClosed", e.target.checked)
+                      handleHoursChange(
+                        hour.dayOfWeek,
+                        "isClosed",
+                        e.target.checked,
+                      )
                     }
                     className="h-4 w-4 accent-[#B11226]"
                   />

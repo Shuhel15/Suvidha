@@ -86,6 +86,9 @@ export async function PATCH(request: NextRequest, { params }: Props) {
               state: location.state,
               postalCode: location.postalCode,
               phone: location.phone || null,
+
+              latitude: location.latitude ?? null,
+              longitude: location.longitude ?? null,
             },
           });
         }

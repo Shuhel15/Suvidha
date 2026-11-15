@@ -100,8 +100,8 @@ export const createBusinessSchema = z.object({
         .string()
         .trim()
         .regex(/^[1-9]\d{5}$/, "Enter a valid 6-digit Indian PIN code"),
-      latitude: z.number().min(-90).max(90).optional(),
-      longitude: z.number().min(-180).max(180).optional(),
+      latitude: z.number().min(-90).max(90).nullable().optional(),
+      longitude: z.number().min(-180).max(180).nullable().optional(),
       phone: z
         .string()
         .trim()
@@ -112,8 +112,8 @@ export const createBusinessSchema = z.object({
         .optional(),
     })
     .superRefine((location, ctx) => {
-      const hasLatitude = location.latitude !== undefined;
-      const hasLongitude = location.longitude !== undefined;
+      const hasLatitude = location.latitude != null;
+      const hasLongitude = location.longitude != null;
 
       if (hasLatitude !== hasLongitude) {
         ctx.addIssue({

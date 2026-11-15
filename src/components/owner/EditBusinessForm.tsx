@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import { staggerContainer, springItem } from "../layout/animation";
 import { motion, type Variants } from "framer-motion";
+import dynamic from "next/dynamic";
 
 type Props = {
   business: {
@@ -16,6 +17,7 @@ type Props = {
     description: string | null;
     category: string;
     phone: string;
+
     locations: {
       id: string;
       branchName: string | null;
@@ -25,6 +27,8 @@ type Props = {
       state: string;
       postalCode: string;
       phone: string | null;
+      latitude: number | null;
+      longitude: number | null;
     }[];
     hours: {
       id: string;
@@ -35,6 +39,10 @@ type Props = {
     }[];
   };
 };
+
+const BusinessLocationMap = dynamic(() => import("./BusinessLocationMap"), {
+  ssr: false,
+});
 
 const weekDays = [
   "Monday",
@@ -85,6 +93,25 @@ export default function EditBusinessForm({ business }: Props) {
 
   const [loading, setLoading] = useState(false);
 
+  const [locationCoordinates, setLocationCoordinates] = useState<{
+    latitude: number;
+    longitude: number;
+    displayName?: string;
+    matchedLevel?: string;
+  } | null>(
+    business.locations[0]?.latitude != null &&
+      business.locations[0]?.longitude != null
+      ? {
+          latitude: business.locations[0].latitude,
+          longitude: business.locations[0].longitude,
+        }
+      : null,
+  );
+
+  const [geocoding, setGeocoding] = useState(false);
+  const [reverseGeocoding, setReverseGeocoding] = useState(false);
+  const [verifiedAddress, setVerifiedAddress] = useState<string | null>(null);
+
   const handleBusinessChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -98,17 +125,103 @@ export default function EditBusinessForm({ business }: Props) {
     }));
   };
 
-  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
+  function handleLocationChange(
+    field: keyof typeof formData.location,
+    value: string,
+  ) {
     setFormData((prev) => ({
       ...prev,
       location: {
         ...prev.location,
-        [name]: value,
+        [field]: value,
       },
     }));
-  };
+
+    if (
+      ["addressLine", "area", "city", "state", "postalCode"].includes(field)
+    ) {
+      setLocationCoordinates(null);
+      setVerifiedAddress(null);
+    }
+  }
+
+  async function handleGeocode() {
+    const { addressLine, area, city, state, postalCode } = formData.location;
+
+    if (
+      !addressLine.trim() ||
+      !city.trim() ||
+      !state.trim() ||
+      !postalCode.trim()
+    ) {
+      toast.error("Please enter the complete address first.");
+      return;
+    }
+
+    setGeocoding(true);
+
+    try {
+      const address = [addressLine, area, city, state, postalCode, "India"]
+        .filter(Boolean)
+        .join(", ");
+
+      const response = await fetch("/api/geocoding", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        toast.error(result.message || "Unable to find this location.");
+        return;
+      }
+
+      setLocationCoordinates({
+        ...result.coordinates,
+        displayName: result.displayName,
+        matchedLevel: result.matchedLevel,
+      });
+
+      setVerifiedAddress(null);
+      toast.success("Location found. Please confirm the map pin.");
+    } catch {
+      toast.error("Something went wrong while finding the location.");
+    } finally {
+      setGeocoding(false);
+    }
+  }
+
+  async function handleReverseGeocode() {
+    if (!locationCoordinates) return;
+
+    setReverseGeocoding(true);
+
+    try {
+      const response = await fetch("/api/reverse-geocoding", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          latitude: locationCoordinates.latitude,
+          longitude: locationCoordinates.longitude,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        toast.error(result.message || "Unable to get address for this pin.");
+        return;
+      }
+
+      setVerifiedAddress(result.displayName);
+    } catch {
+      toast.error("Something went wrong while getting the address.");
+    } finally {
+      setReverseGeocoding(false);
+    }
+  }
 
   const handleHoursChange = (
     dayOfWeek: number,
@@ -159,7 +272,14 @@ export default function EditBusinessForm({ business }: Props) {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            ...formData,
+            location: {
+              ...formData.location,
+              latitude: locationCoordinates?.latitude ?? null,
+              longitude: locationCoordinates?.longitude ?? null,
+            },
+          }),
         },
       );
 
@@ -185,7 +305,7 @@ export default function EditBusinessForm({ business }: Props) {
     <motion.section
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, amount: 0.25 }}
+      viewport={{ once: true, amount: 0.05 }}
       variants={staggerContainer}
       className="relative mt-30"
     >
@@ -374,7 +494,12 @@ export default function EditBusinessForm({ business }: Props) {
                         field.name as keyof typeof formData.location
                       ]
                     }
-                    onChange={handleLocationChange}
+                    onChange={(e) =>
+                      handleLocationChange(
+                        field.name as keyof typeof formData.location,
+                        e.target.value,
+                      )
+                    }
                     className={fieldClass}
                     required={field.required}
                     disabled={loading}
@@ -401,12 +526,121 @@ export default function EditBusinessForm({ business }: Props) {
                           field.name as keyof typeof formData.location
                         ]
                       }
-                      onChange={handleLocationChange}
+                      onChange={(e) =>
+                        handleLocationChange(
+                          field.name as keyof typeof formData.location,
+                          e.target.value,
+                        )
+                      }
                       className={fieldClass}
                       disabled={loading}
                     />
                   </div>
                 ))}
+              </div>
+
+              <div className="space-y-4">
+                <button
+                  type="button"
+                  onClick={handleGeocode}
+                  disabled={geocoding || loading}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#B11226] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#8f0e1e] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {geocoding ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Finding location...
+                    </>
+                  ) : (
+                    <>
+                      <MapPin className="h-4 w-4" />
+                      Find on map
+                    </>
+                  )}
+                </button>
+
+                {locationCoordinates && (
+                  <div className="space-y-3">
+                    <div className="rounded-xl border border-[#d9cdb5] bg-[#eadfbe]/40 p-4">
+                      <p className="text-sm font-bold text-[#332a23]">
+                        Location found
+                      </p>
+
+                      {locationCoordinates.displayName && (
+                        <p className="mt-1 text-xs text-[#806f5d]">
+                          {locationCoordinates.displayName}
+                        </p>
+                      )}
+
+                      {locationCoordinates.matchedLevel &&
+                        locationCoordinates.matchedLevel !== "full_address" && (
+                          <p className="mt-2 text-xs font-medium text-[#B11226]">
+                            Approximate {locationCoordinates.matchedLevel}{" "}
+                            location. Please adjust the pin to your exact
+                            business location.
+                          </p>
+                        )}
+                    </div>
+
+                    <p className="text-sm font-semibold text-[#332a23]">
+                      Adjust your business location
+                    </p>
+
+                    <p className="text-xs text-[#806f5d]">
+                      Drag the marker or click on the map to select your exact
+                      location.
+                    </p>
+
+                    <BusinessLocationMap
+                      key={`${locationCoordinates.latitude}-${locationCoordinates.longitude}`}
+                      latitude={locationCoordinates.latitude}
+                      longitude={locationCoordinates.longitude}
+                      onLocationChangeAction={(latitude, longitude) => {
+                        setVerifiedAddress(null);
+                        setLocationCoordinates((prev) =>
+                          prev ? { ...prev, latitude, longitude } : null,
+                        );
+                      }}
+                    />
+
+                    <p className="text-xs text-[#806f5d]">
+                      Selected coordinates:{" "}
+                      {locationCoordinates.latitude.toFixed(6)},{" "}
+                      {locationCoordinates.longitude.toFixed(6)}
+                    </p>
+
+                    <button
+                      type="button"
+                      onClick={handleReverseGeocode}
+                      disabled={reverseGeocoding || loading}
+                      className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#B11226]/20 bg-[#fffaf0] px-5 py-3 text-sm font-bold text-[#B11226] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {reverseGeocoding ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Getting address...
+                        </>
+                      ) : (
+                        <>
+                          <MapPin className="h-4 w-4" />
+                          Get address for this pin
+                        </>
+                      )}
+                    </button>
+
+                    {verifiedAddress && (
+                      <div className="rounded-xl border border-green-200 bg-green-50 p-4">
+                        <p className="text-sm font-bold text-green-800">
+                          Selected location address
+                        </p>
+
+                        <p className="mt-1 text-sm leading-6 text-green-700">
+                          {verifiedAddress}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div>
@@ -418,7 +652,9 @@ export default function EditBusinessForm({ business }: Props) {
                   type="tel"
                   name="phone"
                   value={formData.location.phone}
-                  onChange={handleLocationChange}
+                  onChange={(e) =>
+                    handleLocationChange("phone", e.target.value)
+                  }
                   className={fieldClass}
                   disabled={loading}
                 />
@@ -456,7 +692,9 @@ export default function EditBusinessForm({ business }: Props) {
 
           <div className="mb-5 flex flex-col gap-3 rounded-2xl border border-[#d9cdb5] bg-[#eadfbe]/45 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm font-bold text-[#332a23]">Same schedule every day?</p>
+              <p className="text-sm font-bold text-[#332a23]">
+                Same schedule every day?
+              </p>
               <p className="mt-0.5 text-xs text-[#806f5d]">
                 Copy Monday&apos;s timing to the rest of the week.
               </p>
@@ -492,8 +730,16 @@ export default function EditBusinessForm({ business }: Props) {
                 </div>
 
                 {[
-                  { label: "Opens", field: "openTime" as const, value: hour.openTime ?? "" },
-                  { label: "Closes", field: "closeTime" as const, value: hour.closeTime ?? "" },
+                  {
+                    label: "Opens",
+                    field: "openTime" as const,
+                    value: hour.openTime ?? "",
+                  },
+                  {
+                    label: "Closes",
+                    field: "closeTime" as const,
+                    value: hour.closeTime ?? "",
+                  },
                 ].map(({ label, field, value }) => (
                   <label key={field} className="block">
                     <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-[#806f5d]">
@@ -511,13 +757,17 @@ export default function EditBusinessForm({ business }: Props) {
                   </label>
                 ))}
 
-                <label className="flex min-h-12 cursor-pointer items-center gap-2.5 rounded-xl border border-[#d9cdb5] bg-[#fffaf0] px-3 text-sm font-bold text-[#332a23] transition hover:border-[#B11226]/30 has-[:checked]:border-[#B11226]/30 has-[:checked]:bg-[#B11226]/5 has-[:checked]:text-[#B11226]">
+                <label className="flex min-h-12 cursor-pointer items-center gap-2.5 rounded-xl border border-[#d9cdb5] bg-[#fffaf0] px-3 text-sm font-bold text-[#332a23] transition hover:border-[#B11226]/30 has-checked:border-[#B11226]/30 has-checked:bg-[#B11226]/5 has-checked:text-[#B11226]">
                   <input
                     type="checkbox"
                     checked={hour.isClosed}
                     disabled={loading}
                     onChange={(e) =>
-                      handleHoursChange(hour.dayOfWeek, "isClosed", e.target.checked)
+                      handleHoursChange(
+                        hour.dayOfWeek,
+                        "isClosed",
+                        e.target.checked,
+                      )
                     }
                     className="h-4 w-4 accent-[#B11226]"
                   />
