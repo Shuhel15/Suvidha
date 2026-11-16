@@ -2,7 +2,16 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowLeft, Building2, Clock3, Copy, MapPin, Save } from "lucide-react";
+import {
+  ArrowLeft,
+  Building2,
+  Clock3,
+  Copy,
+  LocateFixed,
+  MapPin,
+  MapPinned,
+  Save,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
@@ -111,6 +120,7 @@ export default function EditBusinessForm({ business }: Props) {
   const [geocoding, setGeocoding] = useState(false);
   const [reverseGeocoding, setReverseGeocoding] = useState(false);
   const [verifiedAddress, setVerifiedAddress] = useState<string | null>(null);
+  const [gpsLoading, setGpsLoading] = useState(false);
 
   const handleBusinessChange = (
     e: React.ChangeEvent<
@@ -143,6 +153,57 @@ export default function EditBusinessForm({ business }: Props) {
       setLocationCoordinates(null);
       setVerifiedAddress(null);
     }
+  }
+
+  function handleGetCurrentLocation() {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    setGpsLoading(true);
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude, accuracy } = position.coords;
+
+        setLocationCoordinates({
+          latitude,
+          longitude,
+          displayName: "Your current GPS location",
+          matchedLevel: "gps",
+        });
+
+        setVerifiedAddress(null);
+        setGpsLoading(false);
+
+        toast.success(
+          `Location captured (accuracy: ${Math.round(accuracy)} meters).`,
+        );
+      },
+      (error) => {
+        setGpsLoading(false);
+
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            toast.error("Please allow location permission in your browser.");
+            break;
+          case error.POSITION_UNAVAILABLE:
+            toast.error("Your current location is unavailable.");
+            break;
+          case error.TIMEOUT:
+            toast.error("Location request timed out. Please try again.");
+            break;
+          default:
+            toast.error("Unable to capture your location.");
+        }
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0,
+      },
+    );
   }
 
   async function handleGeocode() {
@@ -539,12 +600,13 @@ export default function EditBusinessForm({ business }: Props) {
                 ))}
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-4"></div>
+              <div className="space-y-4 ">
                 <button
                   type="button"
                   onClick={handleGeocode}
                   disabled={geocoding || loading}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#B11226] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#8f0e1e] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="group inline-flex items-center justify-center gap-2 rounded-xl bg-[#B11226] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#8f0e1e] disabled:cursor-not-allowed disabled:opacity-60 mr-1.5 hover:scale-102 ease-in-out duration-200 hover:shadow-[0_4px_12px_rgba(177,18,38,0.15)]"
                 >
                   {geocoding ? (
                     <>
@@ -553,8 +615,27 @@ export default function EditBusinessForm({ business }: Props) {
                     </>
                   ) : (
                     <>
-                      <MapPin className="h-4 w-4" />
+                      <MapPinned className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 duration-200" />
                       Find on map
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleGetCurrentLocation}
+                  disabled={gpsLoading || loading}
+                  className="group inline-flex items-center justify-center gap-2 rounded-xl border border-[#B11226]/20 bg-[#fffaf0] px-5 py-3 text-sm font-bold text-[#B11226] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60 ml-1.5 hover:scale-102 ease-in-out duration-200 hover:shadow-[0_4px_12px_rgba(177,18,38,0.15)]"
+                >
+                  {gpsLoading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Detecting your location...
+                    </>
+                  ) : (
+                    <>
+                      <LocateFixed className="h-4 w-4 transition-transform group-hover:rotate-180 duration-600" />
+                      Use my current location
                     </>
                   )}
                 </button>
