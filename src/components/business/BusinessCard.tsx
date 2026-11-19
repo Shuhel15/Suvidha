@@ -73,7 +73,7 @@ export default function BusinessCard({ business }: BusinessCardProps) {
               {business.services.map((service) => (
                 <li
                   key={service.id}
-                  className="flex flex-col items-start gap-2 rounded-2xl border border-[#B11226]/[0.07] bg-[#EDE0BE]/30 px-3.5 py-3 text-sm text-black/60 transition-all duration-300 hover:border-[#B11226]/15 hover:bg-[#EDE0BE]/55 sm:flex-row sm:items-center sm:justify-between"
+                  className="flex flex-row justify-between items-start gap-2 rounded-2xl border border-[#B11226]/[0.07] bg-[#EDE0BE]/30 px-3.5 py-3 text-sm text-black/60 transition-all duration-300 hover:border-[#B11226]/15 hover:bg-[#EDE0BE]/55 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <span className="font-bold text-black/65">{service.name}</span>
                   <span className="flex flex-wrap items-center gap-1.5 text-xs text-black/40 sm:justify-end">
