@@ -1,11 +1,10 @@
 import { getPublicBusinesses } from "@/services/business.service";
 import { BuildingComplex, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
-import BusinessCard from "@/components/business/BusinessCard";
 import { connection } from "next/server";
 import { Suspense } from "react";
 import Spinner from "@/components/layout/Spineer";
-
+import BusinessDiscovery from "@/components/business/BusinessDiscovery";
 export const metadata: Metadata = {
   title: "Businesses",
   description: "Businesses in your area.",
@@ -18,22 +17,22 @@ async function BusinessesContent() {
 
   return (
     <>
-      <section className="relative overflow-hidden rounded-4xl border border-[#B11226]/10 bg-[#EDE0BE]/75 px-6 py-12 shadow-[0_24px_70px_rgba(84,46,16,0.1)] sm:px-9 sm:py-16 lg:px-16 lg:py-20">
+      <section className="relative overflow-hidden rounded-4xl border border-[#B11226]/10 bg-[#EDE0BE]/75 px-6 py-12 shadow-[0_24px_70px_rgba(84,46,16,0.1)] sm:px-9 sm:py-12 lg:px-12 lg:py-17">
         <div className="pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full border-38 border-[#B11226]/6" />
         <div className="pointer-events-none absolute -bottom-40 left-0 h-80 w-80 rounded-full border-38 border-[#B11226]/5" />
 
-        <div className="relative max-w-3xl">
+        <div className="relative max-w-5xl">
           <p className="inline-flex items-center gap-2 rounded-full border border-[#B11226]/10 bg-white/45 px-3 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-black/55 shadow-inner shadow-black/5">
             <Sparkles size={15} className="text-[#B11226]" />
             Local businesses, made discoverable
           </p>
 
-          <h1 className="mt-7 max-w-2xl text-4xl font-black leading-[1.05] tracking-tight text-black/80 sm:text-6xl">
+          <h1 className="mt-7 max-w-5xl text-4xl font-black leading-[1.05] tracking-tight text-black/80 sm:text-6xl">
             Find a place that{" "}
             <span className="text-[#B11226]">fits your day.</span>
           </h1>
 
-          <p className="mt-6 max-w-xl font-custom text-base leading-7 text-black/55 sm:text-lg">
+          <p className="mt-6 max-w-5xl font-custom text-base leading-7 text-black/55 sm:text-lg">
             Explore trusted local businesses and the services they offer, all in
             one convenient place.
           </p>
@@ -53,18 +52,13 @@ async function BusinessesContent() {
           </div>
         </div>
 
-        <p className="font-custom mt-5 text-black/50">
+        <p className="font-custom mt-5 text-black/50 text-sm">
           Click any business card to book your service / appointment
         </p>
-      </section>
 
-      <section className="mt-10 sm:mt-12">
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {businesses.map((business) => (
-            <BusinessCard key={business.id} business={business} />
-          ))}
-        </div>
       </section>
+        <BusinessDiscovery initialBusinesses={businesses} />
+
     </>
   );
 }

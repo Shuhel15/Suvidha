@@ -47,37 +47,87 @@ export async function getBusinessDetails(
   return business
 }
 
-export async function getPublicBusinesses(){
+
+type PublicBusinessFilters = {
+  category?: string;
+  city?: string;
+  area?: string;
+  postalCode?: string;
+  search?: string;
+};
+
+export async function getPublicBusinesses(
+  filters: PublicBusinessFilters = {},
+) {
+  const { category, city, area, postalCode, search } = filters;
+
   const businesses = await prisma.business.findMany({
-    where:{
-      services:{
-        some:{
-          isActive:true,
-        }
-      }
-    },
-    include:{
-      locations:{
-        orderBy:{
-          createdAt:"asc",
+    where: {
+      ...(category && { category }),
+
+      ...(search && {
+        name: {
+          contains: search,
+          mode: "insensitive",
         },
-        take:1,
+      }),
+
+      services: {
+        some: {
+          isActive: true,
+        },
       },
-      services:{
-        where:{
-          isActive:true,
-        }
-      },
-      hours:{
-        orderBy:{
-          dayOfWeek:"asc"
-        }
-      }
+
+      ...((city || area || postalCode) && {
+        locations: {
+          some: {
+            ...(city && {
+              city: {
+                contains: city,
+                mode: "insensitive",
+              },
+            }),
+
+            ...(area && {
+              area: {
+                contains: area,
+                mode: "insensitive",
+              },
+            }),
+
+            ...(postalCode && {
+              postalCode,
+            }),
+          },
+        },
+      }),
     },
-    orderBy:{
-      createdAt:"desc",
-    }
-  })
+
+    include: {
+      locations: {
+        orderBy: {
+          createdAt: "asc",
+        },
+        take: 1,
+      },
+
+      services: {
+        where: {
+          isActive: true,
+        },
+      },
+
+      hours: {
+        orderBy: {
+          dayOfWeek: "asc",
+        },
+      },
+    },
+
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
   return businesses;
 }

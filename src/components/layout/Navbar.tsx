@@ -17,7 +17,7 @@ export default function Navbar() {
     { href: "/", label: "Home" },
     { href: "/#about", label: "About" },
     { href: "/#how-it-works", label: "How It works" },
-    { href: "/services", label: "Services" },
+    { href: "/businesses", label: "Services" },
   ];
 
   const mobileMenuContainer = {

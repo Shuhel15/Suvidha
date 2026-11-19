@@ -34,7 +34,7 @@ export default function HeroSection() {
     if (status === "loading") return;
 
     if (session) {
-      route.push("/services");
+      route.push("/businesses");
     } else {
       route.push("/login");
     }
