@@ -9,12 +9,12 @@ export default function CustomerDashboardComp() {
       <h1>
         Welcome, <span>{session?.user.name}</span>
       </h1>
-            <button
-              onClick={() => signOut({ callbackUrl: "/" })}
-              className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition"
-            >
-              Logout
-            </button>
+      <button
+        onClick={() => signOut({ callbackUrl: "/" })}
+        className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition"
+      >
+        Logout
+      </button>
     </section>
   );
 }

@@ -46,3 +46,38 @@ export async function getBusinessDetails(
 
   return business
 }
+
+export async function getPublicBusinesses(){
+  const businesses = await prisma.business.findMany({
+    where:{
+      services:{
+        some:{
+          isActive:true,
+        }
+      }
+    },
+    include:{
+      locations:{
+        orderBy:{
+          createdAt:"asc",
+        },
+        take:1,
+      },
+      services:{
+        where:{
+          isActive:true,
+        }
+      },
+      hours:{
+        orderBy:{
+          dayOfWeek:"asc"
+        }
+      }
+    },
+    orderBy:{
+      createdAt:"desc",
+    }
+  })
+
+  return businesses;
+}
