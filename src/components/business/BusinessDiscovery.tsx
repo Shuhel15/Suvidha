@@ -1,5 +1,6 @@
 "use client";
 
+import { SearchX, Sparkles } from "lucide-react";
 import { useState } from "react";
 import BusinessCard from "@/components/business/BusinessCard";
 import BusinessFilters from "@/components/business/BusinessFilters";
@@ -77,26 +78,46 @@ export default function BusinessDiscovery({
 
       {loading && (
         <div
-          className="flex flex-col items-center gap-3"
+          className="rounded-3xl border border-[#B11226]/10 bg-[#EDE0BE]/35 px-6 py-10"
           aria-busy="true"
           aria-live="polite"
         >
-          <div
-            className="relative flex h-20 w-20 items-center justify-center"
-            role="status"
-            aria-label="Searching nearby businesses"
-          >
-            <span className="absolute h-16 w-16 animate-ping rounded-full border border-[#B11226]/30" />
-            <span className="absolute h-12 w-12 animate-spin rounded-full border-2 border-[#EDE0BE] border-t-[#B11226] shadow-inner shadow-black/10" />
-            <span className="relative h-4 w-4 rounded-full bg-[#B11226] shadow-[0_0_0_5px_#B1122633,0_3px_8px_#B1122666]" />
+          <div className="flex flex-col items-center gap-3">
+            <div
+              className="relative flex h-16 w-16 items-center justify-center"
+              role="status"
+              aria-label="Searching nearby businesses"
+            >
+              <span className="absolute h-16 w-16 animate-ping rounded-full border border-[#B11226]/25" />
+              <span className="absolute h-11 w-11 animate-spin rounded-full border-2 border-white border-t-[#B11226] shadow-inner shadow-black/10" />
+              <span className="relative h-3.5 w-3.5 rounded-full bg-[#B11226] shadow-[0_0_0_5px_#B1122633,0_3px_8px_#B1122666]" />
+            </div>
+            <p className="animate-pulse text-center text-sm font-semibold text-black/50">
+              Finding businesses near you...
+            </p>
           </div>
-          <p className="text-center font-semibold text-sm text-black/50 animate-pulse mt-5">
-            Finding businesses near you...
-          </p>
         </div>
       )}
 
-      <section>
+      <section aria-labelledby="business-results-title" className="space-y-5">
+        <div className="flex flex-col gap-3 border-b border-black/[0.07] pb-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[#B11226]">
+              <Sparkles size={14} />
+              Explore local services
+            </p>
+            <h2
+              id="business-results-title"
+              className="mt-2 text-2xl font-black tracking-tight text-black/75 sm:text-3xl"
+            >
+              Businesses worth discovering
+            </h2>
+          </div>
+          <p className="text-sm font-semibold text-black/40">
+            {businesses.length} {businesses.length === 1 ? "result" : "results"}
+          </p>
+        </div>
+
         {businesses.length > 0 ? (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {businesses.map((business) => (
@@ -104,9 +125,18 @@ export default function BusinessDiscovery({
             ))}
           </div>
         ) : (
-          <p className="py-12 text-center text-black/50">
-            No businesses found within 5 km.
-          </p>
+          <div className="flex flex-col items-center rounded-3xl border border-dashed border-[#B11226]/20 bg-[#EDE0BE]/25 px-6 py-14 text-center">
+            <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F5EBD0] text-[#B11226] shadow-inner shadow-black/10">
+              <SearchX size={25} />
+            </span>
+            <h3 className="mt-5 text-lg font-black text-black/70">
+              No businesses found nearby
+            </h3>
+            <p className="mt-2 max-w-sm text-sm leading-6 text-black/45">
+              Try detecting your location again or check back soon for new
+              local services.
+            </p>
+          </div>
         )}
       </section>
     </div>
