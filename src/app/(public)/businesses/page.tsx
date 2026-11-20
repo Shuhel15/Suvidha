@@ -17,7 +17,7 @@ async function BusinessesContent() {
 
   return (
     <div className="space-y-10">
-      <section className="relative overflow-hidden rounded-[2rem] border border-[#B11226]/10 bg-[#EDE0BE]/75 px-6 py-10 shadow-[0_24px_70px_rgba(84,46,16,0.1)] sm:px-9 sm:py-12 lg:px-12 lg:py-16">
+      <section className="relative overflow-hidden rounded-4xl border border-[#B11226]/10 bg-[#EDE0BE]/75 px-6 py-10 shadow-[0_24px_70px_rgba(84,46,16,0.1)] sm:px-9 sm:py-12 lg:px-12 lg:py-16">
         <div className="pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full border-38 border-[#B11226]/6" />
         <div className="pointer-events-none absolute -bottom-40 left-0 h-80 w-80 rounded-full border-38 border-[#B11226]/5" />
 
@@ -66,7 +66,7 @@ async function BusinessesContent() {
 
 export default function BusinessesPage() {
   return (
-    <main className="min-h-screen px-4 pb-24 pt-28 sm:px-6 lg:px-8">
+    <main className="min-h-screen  pb-24 pt-28 ">
       <div className="mx-auto max-w-6xl">
         <Suspense fallback={<Spinner />}>
           <BusinessesContent />
