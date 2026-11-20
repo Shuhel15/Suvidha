@@ -76,7 +76,7 @@ export default function BusinessFilters({
         className="group flex flex-row justify-center gap-2 items-center rounded-xl bg-[#B11226] px-5 py-3 font-semibold text-white transition hover:bg-[#941020] disabled:cursor-not-allowed disabled:opacity-60 hover:scale-102 duration-200 ease-in-out"
       >
         <MapPin size={18} className="text-white transition-transform group-hover:-translate-y-1 duration-200" />
-        {loading ? "Detecting location..." : "Use my current location"}
+        {loading ? "Detecting your location..." : "Use my current location"}
       </button>
 
       {location && (
