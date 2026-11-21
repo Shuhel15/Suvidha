@@ -25,6 +25,14 @@ type Business = {
   }[];
 };
 
+type ManualBusinessFilters = {
+  search?: string;
+  category?: string;
+  city?: string;
+  area?: string;
+  postalCode?: string;
+};
+
 type BusinessDiscoveryProps = {
   initialBusinesses: Business[];
 };
@@ -32,6 +40,7 @@ type BusinessDiscoveryProps = {
 export default function BusinessDiscovery({
   initialBusinesses,
 }: BusinessDiscoveryProps) {
+
   const [businesses, setBusinesses] = useState(initialBusinesses);
   const [loading, setLoading] = useState(false);
 
@@ -72,9 +81,42 @@ export default function BusinessDiscovery({
     }
   }
 
+  async function handleManualSearch(filters: ManualBusinessFilters) {
+  try {
+    setLoading(true);
+
+    const params = new URLSearchParams();
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value?.trim()) {
+        params.set(key, value.trim());
+      }
+    });
+
+    const response = await fetch(
+      `/api/customer/businesses?${params.toString()}`,
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || "Failed to search businesses.");
+    }
+
+    setBusinesses(data.businesses);
+  } catch (error) {
+    console.error("Manual search error:", error);
+  } finally {
+    setLoading(false);
+  }
+}
+
   return (
     <div className="space-y-8">
-      <BusinessFilters onLocationDetectedAction={handleLocationDetected} />
+      <BusinessFilters 
+      onLocationDetectedAction={handleLocationDetected}
+      onManualSearchAction={handleManualSearch}
+       />
 
       {loading && (
         <div

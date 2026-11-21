@@ -9,15 +9,48 @@ type LocationCoordinates = {
   longitude: number;
 };
 
+type ManualBusinessFilters = {
+  search?: string;
+  category?: string;
+  city?: string;
+  area?: string;
+  postalCode?: string;
+};
+
 type BusinessFiltersProps = {
   onLocationDetectedAction?: (coordinates: LocationCoordinates) => void;
+  onManualSearchAction?: (filters: ManualBusinessFilters) => void;
 };
 
 export default function BusinessFilters({
   onLocationDetectedAction,
+  onManualSearchAction,
 }: BusinessFiltersProps) {
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState<LocationCoordinates | null>(null);
+
+  const [filters, setFilters] = useState<ManualBusinessFilters>({
+    search: "",
+    category: "",
+    city: "",
+    area: "",
+    postalCode: "",
+  });
+
+  function handleManualSearch(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const hasFilters = Object.values(filters).some(
+      (value) => value.trim() !== "",
+    );
+
+    if (!hasFilters) {
+      toast.error("Please enter at least one search filter.");
+      return;
+    }
+
+    onManualSearchAction?.(filters);
+  }
 
   function handleDetectLocation() {
     if (!navigator.geolocation) {
@@ -84,18 +117,18 @@ export default function BusinessFilters({
           </div>
         </div>
 
-      <button
-        type="button"
-        onClick={handleDetectLocation}
-        disabled={loading}
-        className="group inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-[#B11226] px-5 py-3 font-semibold text-white shadow-lg shadow-[#B11226]/15 transition duration-200 hover:-translate-y-0.5 hover:bg-[#8F0E1E] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
-      >
-        <MapPin
-          size={18}
-          className="transition-transform duration-200 group-hover:-translate-y-1"
-        />
-        {loading ? "Detecting your location..." : "Use my current location"}
-      </button>
+        <button
+          type="button"
+          onClick={handleDetectLocation}
+          disabled={loading}
+          className="group inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-[#B11226] px-5 py-3 font-semibold text-white shadow-lg shadow-[#B11226]/15 transition duration-200 hover:-translate-y-0.5 hover:bg-[#8F0E1E] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+        >
+          <MapPin
+            size={18}
+            className="transition-transform duration-200 group-hover:-translate-y-1"
+          />
+          {loading ? "Detecting your location..." : "Use my current location"}
+        </button>
       </div>
 
       {location && (
@@ -104,6 +137,72 @@ export default function BusinessFilters({
           Location detected successfully
         </p>
       )}
+
+      <form
+        onSubmit={handleManualSearch}
+        className="mt-6 border-t border-[#B11226]/10 pt-6"
+      >
+        <h3 className="mb-4 text-sm font-black text-black/75">
+          Or search manually
+        </h3>
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <input
+            type="text"
+            placeholder="Business name"
+            value={filters.search}
+            onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+            className="rounded-xl border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-[#B11226]"
+          />
+
+          <select
+            value={filters.category}
+            onChange={(e) =>
+              setFilters({ ...filters, category: e.target.value })
+            }
+            className="rounded-xl border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-[#B11226]"
+          >
+            <option value="">All categories</option>
+            <option value="SALON">Salon & Barbershop</option>
+            <option value="CLINIC">Clinic & Healthcare</option>
+            <option value="REPAIR">Repair Services</option>
+          </select>
+
+          <input
+            type="text"
+            placeholder="City"
+            value={filters.city}
+            onChange={(e) => setFilters({ ...filters, city: e.target.value })}
+            className="rounded-xl border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-[#B11226]"
+          />
+
+          <input
+            type="text"
+            placeholder="Area / Locality"
+            value={filters.area}
+            onChange={(e) => setFilters({ ...filters, area: e.target.value })}
+            className="rounded-xl border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-[#B11226]"
+          />
+
+          <input
+            type="text"
+            placeholder="PIN code"
+            value={filters.postalCode}
+            onChange={(e) =>
+              setFilters({ ...filters, postalCode: e.target.value })
+            }
+            maxLength={6}
+            className="rounded-xl border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-[#B11226]"
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="mt-4 rounded-xl bg-[#B11226] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#8F0E1E]"
+        >
+          Search Businesses
+        </button>
+      </form>
     </div>
   );
 }
