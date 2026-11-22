@@ -1,4 +1,4 @@
-import { Clock3, MapPin, Tag } from "lucide-react";
+import { Clock3, MapPin, Road, Tag } from "lucide-react";
 
 type BusinessCardProps = {
   business: {
@@ -6,6 +6,7 @@ type BusinessCardProps = {
     name: string;
     description: string | null;
     category: string;
+    distance: number | null;
     locations: {
       addressLine: string;
       area: string | null;
@@ -62,6 +63,14 @@ export default function BusinessCard({ business }: BusinessCardProps) {
             </span>
           </p>
         )}
+        {business.distance !== null && business.distance !== undefined && (
+          <p className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-[#B11226]">
+            <Road size={15} />
+            {business.distance < 1
+              ? `${Math.round(business.distance * 1000)} m away`
+              : `${business.distance.toFixed(1)} km away`}
+          </p>
+        )}
 
         <div className="mt-5 border-t border-black/[0.07] pt-4">
           <h3 className="text-[11px] font-bold uppercase tracking-[0.16em] text-black/40">
@@ -75,7 +84,9 @@ export default function BusinessCard({ business }: BusinessCardProps) {
                   key={service.id}
                   className="flex flex-row justify-between items-start gap-2 rounded-2xl border border-[#B11226]/[0.07] bg-[#EDE0BE]/30 px-3.5 py-3 text-sm text-black/60 transition-all duration-300 hover:border-[#B11226]/15 hover:bg-[#EDE0BE]/55 sm:flex-row sm:items-center sm:justify-between"
                 >
-                  <span className="font-bold text-black/65">{service.name}</span>
+                  <span className="font-bold text-black/65">
+                    {service.name}
+                  </span>
                   <span className="flex flex-wrap items-center gap-1.5 text-xs text-black/40 sm:justify-end">
                     <span className="flex items-center gap-1 rounded-full border border-amber-300/70 bg-amber-200/50 px-2 py-1 font-semibold">
                       <Clock3 size={13} className="text-[#B11226]" />

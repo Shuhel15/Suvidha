@@ -17,18 +17,28 @@ type ManualBusinessFilters = {
   postalCode?: string;
 };
 
+type LocationSuggestion = {
+  placeId: number;
+  displayName: string;
+  latitude: number;
+  longitude: number;
+};
+
 type BusinessFiltersProps = {
   onLocationDetectedAction?: (coordinates: LocationCoordinates) => void;
   onManualSearchAction?: (filters: ManualBusinessFilters) => void;
+  onClearFiltersAction?: () => void;
+  onManualLocationSelectedAction?: (coordinates: LocationCoordinates) => void;
 };
 
 export default function BusinessFilters({
   onLocationDetectedAction,
   onManualSearchAction,
+  onClearFiltersAction,
+  onManualLocationSelectedAction,
 }: BusinessFiltersProps) {
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState<LocationCoordinates | null>(null);
-
   const [filters, setFilters] = useState<ManualBusinessFilters>({
     search: "",
     category: "",
@@ -36,6 +46,14 @@ export default function BusinessFilters({
     area: "",
     postalCode: "",
   });
+
+  const [locationQuery, setLocationQuery] = useState("");
+  const [locationSuggestions, setLocationSuggestions] = useState<
+    LocationSuggestion[]
+  >([]);
+  const [selectedLocation, setSelectedLocation] =
+    useState<LocationSuggestion | null>(null);
+  const [locationSearchLoading, setLocationSearchLoading] = useState(false);
 
   function handleManualSearch(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -100,6 +118,44 @@ export default function BusinessFilters({
     );
   }
 
+  async function handleLocationSearch() {
+    const query = locationQuery.trim();
+
+    if (query.length < 3) {
+      toast.error("Please enter at least 3 characters.");
+      return;
+    }
+
+    try {
+      setLocationSearchLoading(true);
+      setSelectedLocation(null);
+      setLocationSuggestions([]);
+
+      const response = await fetch(
+        `/api/location/search?q=${encodeURIComponent(query)}`,
+      );
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Location search failed.");
+      }
+
+      setLocationSuggestions(data.suggestions);
+
+      if (data.suggestions.length === 0) {
+        toast.error("No matching locations found.");
+      }
+    } catch (error) {
+      console.error("Location search error:", error);
+
+      toast.error(
+        error instanceof Error ? error.message : "Unable to search location.",
+      );
+    } finally {
+      setLocationSearchLoading(false);
+    }
+  }
   return (
     <div className="rounded-3xl border border-[#B11226]/10 bg-white/65 p-5 shadow-[0_16px_40px_rgba(84,46,16,0.07)] backdrop-blur-sm sm:p-6">
       <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
@@ -196,12 +252,101 @@ export default function BusinessFilters({
           />
         </div>
 
-        <button
-          type="submit"
-          className="mt-4 rounded-xl bg-[#B11226] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#8F0E1E]"
-        >
-          Search Businesses
-        </button>
+        <div className="flex sm:gap-10 justify-between sm:justify-start">
+          <button
+            type="submit"
+            className="mt-4 rounded-xl bg-[#B11226] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#8F0E1E] hover:scale-103 duration-200 ease-in-out"
+          >
+            Search Businesses
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setFilters({
+                search: "",
+                category: "",
+                city: "",
+                area: "",
+                postalCode: "",
+              });
+
+              onClearFiltersAction?.();
+            }}
+            className="mt-4 rounded-xl border border-[#B11226]/20 px-6 py-3 text-sm font-semibold text-[#B11226] transition hover:bg-[#F5EBD0] hover:scale-103 duration-200 ease-in-out"
+          >
+            Clear Filters
+          </button>
+        </div>
+
+        <div className="mt-6 border-t border-[#B11226]/10 pt-6">
+          <h3 className="mb-3 text-sm font-black text-black/75">
+            Choose your location
+          </h3>
+          <p className="text-xs text-black/50 mb-3">
+            Enter your location to see the distance to nearby businesses.
+            <span className="text-red-600">*</span>
+          </p>
+
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <input
+              type="text"
+              value={locationQuery}
+              onChange={(e) => {
+                setLocationQuery(e.target.value);
+                setSelectedLocation(null);
+                setLocationSuggestions([]);
+              }}
+              placeholder="Enter city, area or PIN code"
+              className="min-w-0 flex-1 rounded-xl border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-[#B11226]"
+            />
+
+            <button
+              type="button"
+              onClick={handleLocationSearch}
+              disabled={locationSearchLoading}
+              className="rounded-xl bg-[#B11226] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#8F0E1E] disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {locationSearchLoading ? "Searching..." : "Search Location"}
+            </button>
+          </div>
+          {locationSuggestions.length > 0 && (
+            <div className="mt-3 overflow-hidden rounded-xl border border-black/10 bg-white shadow-sm">
+              {locationSuggestions.map((suggestion) => (
+                <button
+                  key={suggestion.placeId}
+                  type="button"
+                  onClick={() => {
+                    setSelectedLocation(suggestion);
+                    setLocationQuery(suggestion.displayName);
+                    setLocationSuggestions([]);
+                    onManualLocationSelectedAction?.({
+                      latitude: suggestion.latitude,
+                      longitude: suggestion.longitude,
+                    });
+                  }}
+                  className="flex w-full items-start gap-3 border-b border-black/5 px-4 py-3 text-left transition last:border-0 hover:bg-[#F5EBD0]/60"
+                >
+                  <MapPin
+                    size={17}
+                    className="mt-0.5 shrink-0 text-[#B11226]"
+                  />
+
+                  <span className="text-sm leading-5 text-black/70">
+                    {suggestion.displayName}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        {selectedLocation && (
+          <p className="mt-3 flex items-center gap-2 text-sm font-medium text-emerald-700">
+            <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-emerald-300">
+              <Check size={12}  />
+            </span>
+            Location selected: {selectedLocation.displayName}
+          </p>
+        )}
       </form>
     </div>
   );
