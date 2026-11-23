@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <main className="flex min-h-[70vh] items-center justify-center px-4 py-16 sm:px-6 lg:px-8">
+    <main className="flex min-h-[70vh] items-center justify-center px-4 py-16 sm:px-6 lg:px-8 mt-10">
       <section className="flex w-full max-w-2xl flex-col items-center text-center">
         <div className="relative mb-8">
           <span className="absolute -left-5 -top-3 h-3 w-3 rounded-full bg-[#B11226]/20" />
@@ -13,10 +13,10 @@ export default function NotFound() {
         </div>
 
         <span className="eye mb-5">Page not found</span>
-        <h1 className="h2-text max-w-xl">
+        <h1 className="h2-text text-center ">
           Looks like this service took a wrong turn.
         </h1>
-        <p className="p-text mt-5 max-w-lg">
+        <p className="p-text mt-5  text-center">
           The page you are looking for may have moved, expired, or never
           existed. Let&apos;s get you back to a useful place.
         </p>
@@ -29,7 +29,7 @@ export default function NotFound() {
             Back to home
           </Link>
           <Link
-            href="/services"
+            href="/businesses"
             className="btn border border-[#B11226]/30 bg-[#EDE0BE] text-[#B11226] hover:bg-[#e4d3a8]"
           >
             Explore services

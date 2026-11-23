@@ -54,7 +54,7 @@ export default function HeroSection() {
           Your time. Your convenience.
         </motion.p>
 
-        <motion.h1 variants={springItem as Variants} className="hero-text ">
+        <motion.h1 variants={springItem as Variants} className="hero-text text-6xl text-nowrap">
           Skip the wait.
           <span className="mt-2 block font-custom text-3xl font-semibold tracking-tight text-[#514A3D] sm:text-4xl md:text-5xl lg:text-6xl">
             Find services near you.
@@ -75,24 +75,24 @@ export default function HeroSection() {
           className="mt-2 flex sm:flex-row flex-col justify-center gap-3 sm:gap-6"
         >
           <motion.button
-            whileHover={{ scale: 1.1 }}
+            whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 1 }}
             onClick={handleExploreServices}
             type="button"
             disabled={status === "loading"}
-            className="group btn text-white bg-[#B11226] hover:bg-[#921020] gap-2 disabled:opacity-50"
+            className="group btn text-lg p-3 text-white bg-[#B11226] hover:bg-[#921020] gap-2 disabled:opacity-50 "
           >
             Explore services
             <MoveRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
           </motion.button>
 
           <motion.button
-            whileHover={{ scale: 1.1 }}
+            whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 1 }}
             onClick={handleBusinessClick}
             type="button"
             disabled={status === "loading"}
-            className="btn hover:bg-[#EDE0BE] disabled:opacity-50"
+            className="btn text-lg p-3 hover:bg-[#EDE0BE] disabled:opacity-50"
           >
             {status === "loading" ? "Loading..." : buttonText}
           </motion.button>
@@ -100,7 +100,7 @@ export default function HeroSection() {
 
         <motion.p
           variants={springItem as Variants}
-          className="mt-4 text-center text-xs font-medium tracking-wide text-black/50 sm:mt-6 sm:text-sm"
+          className="mt-10 text-center text-xs font-medium tracking-wide text-black/50 sm:mt-6 sm:text-sm"
         >
           Salons <span className="px-1.5 text-[#B11226]">·</span>
           Clinics <span className="px-1.5 text-[#B11226]">·</span>

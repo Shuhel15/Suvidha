@@ -167,7 +167,7 @@ export default function FAQSection() {
 
           <button
             type="button"
-            onClick={() => router.push("/services")}
+            onClick={() => router.push("/businesses")}
             className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-[#B11226] px-5 py-3 text-sm font-semibold text-white transition-colors duration-300 hover:bg-[#821422] active:scale-95"
           >
             Explore services

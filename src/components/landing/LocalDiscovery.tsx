@@ -51,7 +51,7 @@ export default function LocalDiscovery() {
           <motion.button
             variants={springItem as Variants}
             type="button"
-            onClick={() => router.push("services")}
+            onClick={() => router.push("/businesses")}
             className="group mt-8 inline-flex items-center gap-2 rounded-full bg-[#B11226] px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-[#821422] active:scale-95 "
           >
             Eplore local services

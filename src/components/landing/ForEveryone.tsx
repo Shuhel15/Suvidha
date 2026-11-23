@@ -10,9 +10,24 @@ import {
   Activity,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function ForEveryone() {
   const router = useRouter();
+    const { data: session, status } = useSession();
+      const accountType = session?.user?.accountType;
+
+    const handleBusinessClick = () => {
+    if (status === "loading") return;
+
+    if (!session) {
+      router.push("/login");
+    } else if (accountType === "BUSINESS_OWNER") {
+      router.push("/owner/dashboard");
+    } else {
+      router.push("/customer/dashboard");
+    }
+  };
   return (
     <motion.section 
     initial="hidden"
@@ -96,7 +111,7 @@ export default function ForEveryone() {
           </ul>
           <button
             type="button"
-            onClick={() => router.push("/services")}
+            onClick={() => router.push("/businesses")}
             className="mt-auto inline-flex w-fit items-center gap-2 rounded-full bg-[#B11226] px-5 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-[#821422] active:scale-95"
           >
             Explore services
@@ -158,7 +173,7 @@ export default function ForEveryone() {
           </ul>
           <button
             type="button"
-            onClick={() => router.push("/services")}
+            onClick={handleBusinessClick}
             className="mt-auto inline-flex w-fit items-center gap-2 rounded-full bg-[#B11226] px-5 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-[#821422] active:scale-95"
           >
             Get started{" "}
