@@ -1,4 +1,5 @@
 import { Clock3, MapPin, Road, Tag } from "lucide-react";
+import Link from "next/link";
 
 type BusinessCardProps = {
   business: {
@@ -26,7 +27,10 @@ export default function BusinessCard({ business }: BusinessCardProps) {
   const location = business.locations[0];
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-black/[0.07] bg-white/45 p-5 shadow-[0_12px_35px_rgba(84,46,16,0.06)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#B11226]/20 hover:shadow-[0_18px_40px_rgba(177,18,38,0.1)] sm:p-6">
+    <Link
+      href={`/businesses/${business.id}`}
+      className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-black/[0.07] bg-white/45 p-5 shadow-[0_12px_35px_rgba(84,46,16,0.06)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#B11226]/20 hover:shadow-[0_18px_40px_rgba(177,18,38,0.1)] sm:p-6 active:scale-95  ease-in-out "
+    >
       <div className="absolute right-0 top-0 h-20 w-20 rounded-bl-[3rem] bg-[#B11226]/5 transition-colors duration-300 group-hover:bg-[#B11226]/9" />
       <div className="relative">
         <div className="flex items-start justify-between gap-3">
@@ -104,6 +108,6 @@ export default function BusinessCard({ business }: BusinessCardProps) {
           )}
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
