@@ -1,52 +1,53 @@
-import {auth} from "@/auth"
-import {NextResponse} from "next/server"
 
-type AccountRole = "CUSTOMER"|"BUSINESS_OWNER"
+import { auth } from "@/auth";
+import { NextResponse } from "next/server";
 
-export async function requireAuth(){
-  const session = await  auth()
+type AccountRole = "CUSTOMER" | "BUSINESS_OWNER";
 
-  //If user is logged in
-  if(!session?.user){
-    return{
+export async function requireAuth() {
+  const session = await auth();
+
+  if (!session?.user) {
+    return {
       session: null,
-      response: NextResponse.json({
-        success: false,
-        message: "Unauthorized. Please log in first.",
-      },
-      {status: 401}
-    )
-    }
-  }
-  return{
-    session,
-    response: null
+      response: NextResponse.json(
+        {
+          success: false,
+          message: "Unauthorized. Please log in first.",
+        },
+        { status: 401 }
+      ),
+    };
   }
 
+  return {
+    session,
+    response: null,
+  };
 }
 
-export async function requireRole(role: AccountRole){
-  const {session, response} = await requireAuth()
+export async function requireRole(role: AccountRole) {
+  const { session, response } = await requireAuth();
 
-  //Auth failed
-  if(response){
-    return {session: null, response}
+  if (response) {
+    return { session: null, response };
   }
 
-  //Role auth failed
-  if(session?.user.accountType !== role){
-    return{
+  if (session?.user?.accountType !== role) {
+    return {
       session: null,
-      response: NextResponse.json({
-        success: false,
-        message:"Forbidden. You don't have permission."
-      },
-      {status: 403}
-    )
-    }
+      response: NextResponse.json(
+        {
+          success: false,
+          message: "Forbidden. You don't have permission.",
+        },
+        { status: 403 }
+      ),
+    };
   }
-  return{
+
+  return {
     session,
-    response: null
-  }
+    response: null,
+  };
 }
