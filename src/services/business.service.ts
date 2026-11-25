@@ -38,6 +38,14 @@ export async function getBusinessDetails(businessId: string, ownerId: string) {
           dayOfWeek: "asc",
         },
       },
+      services: {
+        where: {
+          isActive: true,
+        },
+        select: {
+          id: true,
+        },
+      },
     },
   });
 

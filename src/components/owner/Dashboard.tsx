@@ -192,7 +192,6 @@ export default function OwnerDashboardComp({ businesses }: Props) {
                           size={15}
                           className="transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                         />
-                      
                       </span>
                     </div>
 
@@ -209,7 +208,10 @@ export default function OwnerDashboardComp({ businesses }: Props) {
                     </span>
 
                     <div className="mt-6 flex items-center gap-2 text-sm text-gray-600">
-                      <MapPin size={16} className="shrink-0 text-[#B11226] transition-transform group-hover:-translate-y-0.5 duration-200" />
+                      <MapPin
+                        size={16}
+                        className="shrink-0 text-[#B11226] transition-transform group-hover:-translate-y-0.5 duration-200"
+                      />
 
                       {location
                         ? `${location.city}, ${location.state}`
@@ -217,14 +219,20 @@ export default function OwnerDashboardComp({ businesses }: Props) {
                     </div>
 
                     <p className="mt-3 flex items-center gap-2 border-t border-black/5 pt-3 text-sm text-gray-500">
-                      <Phone size={16} className="shrink-0 text-[#B11226] transition-transform duration-200 group-hover:-translate-x-0.5" />
+                      <Phone
+                        size={16}
+                        className="shrink-0 text-[#B11226] transition-transform duration-200 group-hover:-translate-x-0.5"
+                      />
                       {business.phone}
                     </p>
                   </Link>
 
                   {/* Edit, add services and Delete Actions */}
                   <div className="mt-5 border-t border-black/5 pt-4">
-                    <BusinessActions businessId={business.id} />
+                    <BusinessActions
+                      businessId={business.id}
+                      businessCategory={business.category}
+                    />{" "}
                   </div>
                 </div>
               );

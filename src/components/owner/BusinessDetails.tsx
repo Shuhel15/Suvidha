@@ -5,6 +5,7 @@ import {
   Building2,
   Clock,
   FileText,
+  ListOrdered,
   MapPin,
   Pencil,
   Phone,
@@ -108,32 +109,43 @@ export default function BusinessDetails({ business }: Props) {
             </p>
           </div>
 
-          <div className="flex w-full flex-col gap-3 sm:flex-row lg:w-auto">
+          <div className="grid w-full grid-cols-2 gap-2.5 sm:grid-cols-2 lg:w-97.5 lg:shrink-0">
+            <Link
+              href={`/owner/businesses/${business.id}/services`}
+              className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#B11226] px-4 py-3 font-semibold text-white shadow-lg shadow-[#B11226]/15 transition hover:-translate-y-0.5 hover:bg-[#8f0e1e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#B11226] focus-visible:ring-offset-2"
+            >
+              <Plus
+                size={17}
+                className="transition-transform duration-300 group-hover:rotate-90"
+              />
+              Add services
+            </Link>
+            {business.category === "SALON" && (
+              <Link
+                href={`/owner/businesses/${business.id}/queue`}
+                className="whitespace-nowrap group inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-[#B11226]/20 bg-[#F5EBD0]/45 px-4 py-3 font-semibold text-[#8f0e1e] transition hover:-translate-y-0.5 hover:border-[#B11226]/40 hover:bg-[#F5EBD0] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#B11226] focus-visible:ring-offset-2"
+              >
+                <ListOrdered
+                  size={17}
+                  className="shrink-0 transition-transform group-hover:scale-105"
+                />
+                Manage Queue
+              </Link>
+            )}
             <Link
               href={`/owner/businesses/${business.id}/edit`}
-              className="group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-[#B11226]/25 bg-white/70 px-5 py-3 font-semibold text-[#B11226] transition hover:-translate-y-0.5 hover:border-[#B11226] hover:bg-white lg:flex-none"
+              className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-black/10 bg-white/70 px-4 py-3 font-semibold text-gray-700 transition hover:-translate-y-0.5 hover:border-[#B11226]/30 hover:bg-white hover:text-[#B11226] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#B11226] focus-visible:ring-offset-2"
             >
               <Pencil
                 size={17}
-                className="transition-transform group-hover:-translate-x-0.5 duration-200"
+                className="transition-transform duration-200 group-hover:-translate-y-0.5"
               />
               Edit business
             </Link>
             <DeleteBusinessButton
               businessId={business.id}
-              className="group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#B11226] px-5 py-3 font-semibold text-white shadow-lg shadow-[#B11226]/15 transition hover:-translate-y-0.5 hover:bg-[#8f0e1e] lg:flex-none"
+              className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-rose-200 bg-rose-50/60 px-4 py-3 font-semibold text-rose-700 transition hover:-translate-y-0.5 hover:border-rose-300 hover:bg-rose-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2"
             />
-
-            <Link
-              href={`/owner/businesses/${business.id}/services`}
-              className="group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-[#B11226]/25 bg-white/70 px-5 py-3 font-semibold text-[#B11226] transition hover:-translate-y-0.5 hover:border-[#B11226] hover:bg-white lg:flex-none"
-            >
-              <Plus
-                size={17}
-                className="transition-transform group-hover:rotate-180 duration-600"
-              />
-              Add Services
-            </Link>
           </div>
         </motion.header>
 
@@ -316,7 +328,8 @@ export default function BusinessDetails({ business }: Props) {
                         </span>
                       ) : (
                         <span className="text-sm font-semibold text-gray-700 bg-emerald-400/20 py-2 px-3 rounded-full shadow-inner shadow-black/5">
-                          {formatTime(schedule.openTime)} - {formatTime(schedule.closeTime)}
+                          {formatTime(schedule.openTime)} -{" "}
+                          {formatTime(schedule.closeTime)}
                         </span>
                       )
                     ) : (

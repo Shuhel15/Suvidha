@@ -386,9 +386,9 @@ export default function QueueManagement({ businessId }: QueueManagementProps) {
         {summary.map(({ label, count, note, icon: Icon, iconClass }) => (
           <article
             key={label}
-            className="rounded-2xl border border-black/5 bg-white p-4 shadow-[0_12px_35px_rgba(80,45,20,0.05)] sm:p-5"
+            className="rounded-2xl border border-black/5 bg-white p-4 shadow-[0_12px_35px_rgba(80,45,20,0.05)] sm:p-5 hover:scale-103 transition-all duration-200 ease-in-out"
           >
-            <div className="flex items-start justify-between gap-2">
+            <div className="flex items-start justify-between gap-2 ">
               <div>
                 <p className="text-xs font-semibold text-black/50">{label}</p>
                 <p className="mt-2 text-3xl font-black tracking-tight text-gray-900">
