@@ -202,7 +202,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: true,
-        message: "Queue token generated successfully.",
+        message: "Your service booked successfully.",
         data: token,
       },
       { status: 201 },
