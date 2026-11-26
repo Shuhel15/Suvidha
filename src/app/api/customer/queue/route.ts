@@ -217,7 +217,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: "You already have a token for this salon today.",
+          message: "You already booked a service for this salon today.",
         },
         { status: 409 },
       );

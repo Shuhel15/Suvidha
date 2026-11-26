@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -11,11 +10,10 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { getPublicBusinessDetails } from "@/services/business.service";
+import BookServiceButton from "@/components/business/BookServiceButton";
 
 type BusinessDetailsProps = {
-  business: NonNullable<
-    Awaited<ReturnType<typeof getPublicBusinessDetails>>
-  >;
+  business: NonNullable<Awaited<ReturnType<typeof getPublicBusinessDetails>>>;
 };
 
 const dayNames = [
@@ -28,9 +26,17 @@ const dayNames = [
   "Sunday",
 ];
 
-export default function BusinessDetails({
-  business,
-}: BusinessDetailsProps) {
+function formatTime(time: string | null) {
+  if (!time) return "";
+
+  const [hours, minutes] = time.split(":").map(Number);
+  const period = hours >= 12 ? "PM" : "AM";
+  const formattedHours = hours % 12 || 12;
+
+  return `${String(formattedHours).padStart(2, "0")}:${String(minutes).padStart(2, "0")} ${period}`;
+}
+
+export default function BusinessDetails({ business }: BusinessDetailsProps) {
   const location = business.locations[0];
   const fullAddress = location
     ? [
@@ -170,6 +176,12 @@ export default function BusinessDetails({
                       <Clock3 size={14} className="text-[#B11226]" />
                       {service.duration} minutes
                     </div>
+                    {business.category === "SALON" && (
+                      <BookServiceButton
+                        businessId={business.id}
+                        serviceId={service.id}
+                      />
+                    )}
                   </article>
                 ))}
               </div>
@@ -189,9 +201,7 @@ export default function BusinessDetails({
                 <h2 className="text-lg font-black text-black/75">
                   Opening hours
                 </h2>
-                <p className="mt-0.5 text-xs text-black/40">
-                  Weekly schedule
-                </p>
+                <p className="mt-0.5 text-xs text-black/40">Weekly schedule</p>
               </div>
             </div>
 
@@ -216,7 +226,8 @@ export default function BusinessDetails({
                         </span>
                       ) : (
                         <span className="text-right text-xs font-bold text-black/50 sm:text-sm">
-                          {hours.openTime} – {hours.closeTime}
+                          {formatTime(hours.openTime)} –{" "}
+                          {formatTime(hours.closeTime)}
                         </span>
                       )
                     ) : (
