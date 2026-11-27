@@ -20,7 +20,7 @@ enum QueueTokenStatus {
   SKIPPED
 }
 
-enum RepairJobStatus{
+enum RepairJobStatus {
   RECEIVED
   DIAGNOSING
   IN_REPAIR
@@ -41,9 +41,9 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  businesses Business[]
+  businesses  Business[]
   queueTokens QueueToken[]
-  repairJobs RepairJob[]
+  repairJobs  RepairJob[]
 }
 
 model Business {
@@ -63,12 +63,13 @@ model Business {
 
   services Service[]
 
+  hours            BusinessHours[]
+  queueSessions    QueueSession[]
+  repairJobs       RepairJob[]
+  repairJobCounter RepairJobCounter?
+
   @@index([ownerId])
   @@index([category])
-
-  hours BusinessHours[]
-  queueSessions QueueSession[]
-  repairJobs RepairJob[]
 }
 
 model BusinessLocation {
@@ -109,11 +110,11 @@ model Service {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  @@index([businessId])
-
   queueTokens QueueToken[]
 
   repairJobs RepairJob[]
+
+  @@index([businessId])
 }
 
 model BusinessHours {
@@ -151,25 +152,23 @@ model QueueSession {
 
   @@unique([businessId, date])
   @@index([businessId, date])
-
 }
 
-
 model QueueToken {
-  id              String           @id @default(cuid())
-  tokenNumber     Int
-  status          QueueTokenStatus @default(WAITING)
+  id          String           @id @default(cuid())
+  tokenNumber Int
+  status      QueueTokenStatus @default(WAITING)
 
-  sessionId       String
-  customerId      String
-  serviceId       String
+  sessionId  String
+  customerId String
+  serviceId  String
 
-  session         QueueSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  customer        User          @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  service         Service       @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+  session  QueueSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  customer User         @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  service  Service      @relation(fields: [serviceId], references: [id], onDelete: Restrict)
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([sessionId, tokenNumber])
   @@unique([sessionId, customerId])
@@ -203,4 +202,15 @@ model RepairJob {
   @@unique([businessId, jobNumber])
   @@index([customerId])
   @@index([businessId, status])
+}
+
+model RepairJobCounter {
+  id            String @id @default(cuid())
+  businessId    String @unique
+  lastJobNumber Int    @default(0)
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
