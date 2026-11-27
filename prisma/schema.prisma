@@ -20,6 +20,15 @@ enum QueueTokenStatus {
   SKIPPED
 }
 
+enum RepairJobStatus{
+  RECEIVED
+  DIAGNOSING
+  IN_REPAIR
+  READY_FOR_PICKUP
+  COLLECTED
+  CANCELLED
+}
+
 model User {
   id            String      @id @default(cuid())
   name          String
@@ -34,6 +43,7 @@ model User {
 
   businesses Business[]
   queueTokens QueueToken[]
+  repairJobs RepairJob[]
 }
 
 model Business {
@@ -58,6 +68,7 @@ model Business {
 
   hours BusinessHours[]
   queueSessions QueueSession[]
+  repairJobs RepairJob[]
 }
 
 model BusinessLocation {
@@ -101,6 +112,8 @@ model Service {
   @@index([businessId])
 
   queueTokens QueueToken[]
+
+  repairJobs RepairJob[]
 }
 
 model BusinessHours {
@@ -121,6 +134,7 @@ model BusinessHours {
   @@index([businessId])
 }
 
+//For salon shops.
 model QueueSession {
   id         String   @id @default(cuid())
   businessId String
@@ -161,4 +175,32 @@ model QueueToken {
   @@unique([sessionId, customerId])
   @@index([sessionId, status])
   @@index([customerId])
+}
+
+model RepairJob {
+  id        String @id @default(cuid())
+  jobNumber Int
+
+  itemName String
+  issue    String
+
+  status RepairJobStatus @default(RECEIVED)
+
+  estimatedCost Float?
+  finalCost     Float?
+
+  customerId String
+  businessId String
+  serviceId  String?
+
+  customer User     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  service  Service? @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([businessId, jobNumber])
+  @@index([customerId])
+  @@index([businessId, status])
 }
